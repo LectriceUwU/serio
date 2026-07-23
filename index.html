@@ -1,0 +1,1996 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7fb">
+  <link rel="icon" type="image/png" href="assets/counters/logo.png">
+  <title>Serio · partidas entre amigos</title>
+  <style>
+    :root {
+      --ink: #17243b;
+      --ink-soft: #536176;
+      --ink-faint: #8390a3;
+      --surface: #ffffff;
+      --surface-soft: #f7f9fc;
+      --line: #e4e9f1;
+      --primary: #315ddc;
+      --primary-dark: #2346b1;
+      --primary-soft: #eaf0ff;
+      --teal: #0a9a8f;
+      --teal-soft: #e3f6f3;
+      --orange: #ea8c3a;
+      --orange-soft: #fff0df;
+      --danger: #d64d65;
+      --danger-soft: #fff0f2;
+      --shadow: 0 20px 50px rgba(33, 52, 92, .10);
+      --radius-lg: 28px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --content-width: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { min-width: 320px; background: #eef2f7; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 6% 0%, rgba(49, 93, 220, .13), transparent 28rem),
+        #f6f7fb;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    button, input, textarea { font: inherit; }
+
+    button { cursor: pointer; }
+
+    button:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 3px solid rgba(49, 93, 220, .25);
+      outline-offset: 2px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .hidden { display: none !important; }
+
+    .app-shell { min-height: 100vh; }
+
+    .login-screen {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 28px 18px;
+    }
+
+    .login-layout {
+      width: min(100%, 1040px);
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(360px, 1.08fr);
+      background: var(--surface);
+      border: 1px solid rgba(228, 233, 241, .85);
+      border-radius: 34px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .login-intro {
+      position: relative;
+      isolation: isolate;
+      min-height: 560px;
+      padding: 52px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #fff;
+      background:
+        linear-gradient(155deg, rgba(41, 75, 180, .98), rgba(22, 36, 76, .98)),
+        #2449b4;
+    }
+
+    .login-intro::before,
+    .login-intro::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 50%;
+    }
+
+    .login-intro::before { width: 360px; height: 360px; top: -160px; right: -130px; }
+    .login-intro::after { width: 280px; height: 280px; bottom: -165px; left: -120px; }
+
+    .brand-lockup, .top-brand { display: flex; align-items: center; gap: 11px; }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      color: var(--primary);
+      background: #fff;
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -.06em;
+      box-shadow: 0 8px 18px rgba(17, 31, 76, .20);
+    }
+
+    .brand-logo { width: 40px; height: 40px; display: block; object-fit: contain; filter: drop-shadow(0 5px 11px rgba(17,31,76,.22)); }
+
+    .brand-name { font-weight: 750; letter-spacing: -.02em; }
+
+    .login-intro .brand-mark { color: #fff; background: rgba(255,255,255,.14); box-shadow: none; }
+
+    .intro-copy { max-width: 430px; }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .login-intro .eyebrow { color: #b8caff; }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1, h2, h3 { letter-spacing: -.04em; line-height: 1.08; }
+
+    h1 { margin-bottom: 18px; font-size: clamp(34px, 5vw, 54px); }
+    h2 { margin-bottom: 8px; font-size: clamp(26px, 3vw, 34px); }
+    h3 { margin-bottom: 6px; font-size: 20px; }
+
+    .intro-copy p:not(.eyebrow) { margin-bottom: 0; color: #d9e2ff; font-size: 17px; }
+
+    .intro-footer { color: #b8caff; font-size: 13px; }
+
+    .login-form-panel { padding: 52px clamp(28px, 5vw, 64px); display: flex; align-items: center; }
+
+    .login-form { width: 100%; max-width: 420px; margin: 0 auto; }
+
+    .login-form h2 { font-size: 30px; }
+
+    .muted { color: var(--ink-soft); }
+    .faint { color: var(--ink-faint); }
+    .small { font-size: 13px; }
+
+    .form-stack { display: grid; gap: 14px; }
+
+    .session-check { display: flex; align-items: flex-start; gap: 9px; color: var(--ink-soft); font-size: 13px; line-height: 1.35; }
+    .session-check input { width: 17px; height: 17px; flex: 0 0 auto; margin: 0; accent-color: var(--primary); }
+
+    .field-label { display: block; margin-bottom: 7px; color: var(--ink); font-size: 13px; font-weight: 700; }
+
+    .text-input, .rules-textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      color: var(--ink);
+      background: var(--surface-soft);
+      transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .text-input { min-height: 50px; padding: 0 15px; }
+    .rules-textarea { min-height: 260px; resize: vertical; padding: 15px; line-height: 1.55; }
+
+    .text-input::placeholder, .rules-textarea::placeholder { color: #a4adbb; }
+    .text-input:hover, .rules-textarea:hover { border-color: #bac5d5; }
+    .text-input:focus, .rules-textarea:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(49,93,220,.11); outline: none; }
+
+    .form-error { min-height: 19px; color: var(--danger); font-size: 13px; font-weight: 650; }
+
+    .btn {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      color: var(--ink);
+      background: var(--surface-soft);
+      font-weight: 700;
+      line-height: 1.1;
+      transition: transform .16s ease, box-shadow .16s ease, background .16s ease, border-color .16s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 16px rgba(33,52,92,.10); }
+    .btn:active { transform: translateY(0); box-shadow: none; }
+    .btn-primary { color: #fff; background: var(--primary); box-shadow: 0 9px 18px rgba(49,93,220,.20); }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-secondary { color: var(--primary); border-color: #cbd6f7; background: var(--primary-soft); }
+    .btn-ghost { border-color: transparent; color: var(--ink-soft); background: transparent; }
+    .btn-ghost:hover { color: var(--ink); background: var(--surface-soft); box-shadow: none; }
+    .btn-danger { color: var(--danger); border-color: #f2c9d0; background: var(--danger-soft); }
+    .btn-danger:hover { background: #ffe5e9; }
+    .btn-block { width: 100%; }
+    .btn-small { min-height: 36px; padding: 8px 12px; font-size: 13px; }
+
+    .demo-hint { margin: 30px 0 0; padding: 14px 15px; border-radius: var(--radius-sm); color: var(--ink-soft); background: var(--surface-soft); font-size: 13px; }
+    .demo-hint strong { color: var(--ink); }
+
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid rgba(228,233,241,.8);
+      background: rgba(246,247,251,.88);
+      backdrop-filter: blur(17px);
+    }
+
+    .header-inner, .main-inner { width: min(100% - 36px, var(--content-width)); margin: 0 auto; }
+
+    .header-inner { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .top-brand .brand-mark { width: 36px; height: 36px; border-radius: 11px; color: #fff; background: var(--primary); font-size: 17px; box-shadow: none; }
+    .top-brand .brand-logo { width: 36px; height: 36px; filter: drop-shadow(0 3px 7px rgba(17,31,76,.16)); }
+    .top-brand .brand-name { font-size: 18px; }
+
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+
+    .user-pill { display: inline-flex; align-items: center; gap: 8px; min-height: 38px; padding: 6px 11px 6px 7px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font-size: 13px; font-weight: 700; }
+    .sync-status { display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink-faint); background: var(--surface); font-size: 11px; font-weight: 800; }
+    .sync-status::before { width: 7px; height: 7px; border-radius: 50%; content: ""; background: #aeb7c5; }
+    .sync-status.is-online { color: #08746d; border-color: #b9e7df; background: #ecfbf8; }
+    .sync-status.is-online::before { background: #0a9a8f; }
+    .sync-status.is-saving::before, .sync-status.is-connecting::before { background: #d8a235; }
+    .sync-status.is-error { color: #a5364c; border-color: #f4c6ce; background: #fff1f3; }
+    .sync-status.is-error::before { background: var(--danger); }
+    .user-avatar-upload { display: inline-grid; cursor: pointer; border-radius: 50%; }
+    .user-avatar-upload:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .avatar { width: 25px; height: 25px; display: grid; place-items: center; overflow: hidden; border-radius: 50%; color: #fff; background: var(--teal); font-size: 11px; font-weight: 800; }
+
+    .main-inner { padding: 42px 0 64px; }
+
+    .screen { animation: screen-in .22s ease both; }
+    @keyframes screen-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    .screen-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 28px; }
+    .screen-heading p { max-width: 610px; margin-bottom: 0; color: var(--ink-soft); }
+    .heading-actions { display: flex; flex-wrap: wrap; gap: 9px; justify-content: flex-end; }
+
+    .home-welcome { margin-bottom: 30px; }
+    .home-welcome h1 { max-width: 730px; margin-bottom: 12px; font-size: clamp(31px, 5vw, 54px); }
+    .home-welcome p { margin-bottom: 0; color: var(--ink-soft); font-size: 17px; }
+
+    .quick-start {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 30px;
+      padding: 22px 24px;
+      border: 1px solid #d8e1ff;
+      border-radius: var(--radius-md);
+      background: linear-gradient(110deg, var(--primary-soft), #f5f7ff);
+    }
+
+    .quick-start-copy { display: flex; align-items: center; gap: 15px; }
+    .quick-start-icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; color: var(--primary); background: #fff; font-size: 20px; }
+    .quick-start h3 { margin: 0 0 3px; font-size: 17px; letter-spacing: -.02em; }
+    .quick-start p { margin: 0; color: var(--ink-soft); font-size: 13px; }
+
+    .menu-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+
+    .menu-card {
+      position: relative;
+      isolation: isolate;
+      min-height: 172px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: space-between;
+      overflow: hidden;
+      padding: 0;
+      border: 2px solid var(--line);
+      border-radius: var(--radius-md);
+      color: var(--ink);
+      text-align: left;
+      background: var(--surface);
+      box-shadow: 0 7px 20px rgba(33,52,92,.04);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .menu-card::after { position: absolute; z-index: -1; inset: 0; content: ""; background: linear-gradient(180deg, rgba(7,12,26,.04) 24%, rgba(7,12,26,.78) 100%); }
+    .menu-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .menu-card:hover .menu-card-image img { transform: scale(1.045); }
+    .menu-card.construction { border-color: #9aa1aa; cursor: not-allowed; }
+    .menu-card.construction::after { background: linear-gradient(180deg, rgba(16,23,34,.08) 18%, rgba(16,23,34,.78) 100%); }
+    .menu-card.construction:hover { transform: none; box-shadow: 0 7px 20px rgba(33,52,92,.04); }
+    .menu-card.construction:hover .menu-card-image img { transform: none; }
+    .menu-card.construction .menu-card-title { color: #f1f3f5; }
+    .menu-card-image { position: absolute; z-index: -2; inset: 0; display: block; }
+    .menu-card-image img { width: 100%; height: 100%; display: block; object-fit: cover; transition: transform .35s ease; }
+    .menu-card-content { position: relative; z-index: 1; display: flex; align-items: flex-end; min-height: 172px; padding: 19px 20px; }
+    .menu-card-title { margin: 0; color: #fff; font-size: 18px; font-weight: 850; letter-spacing: -.02em; text-shadow: 0 2px 9px rgba(0,0,0,.48); }
+    .menu-card.start { border-color: #d44936; }
+    .menu-card.ranking { border-color: #d6ad45; }
+    .menu-card.ranking .menu-card-title { color: #fff3b0; }
+    .menu-card.players { border-color: #278dcc; }
+    .menu-card.history { border-color: #171a2b; }
+    .menu-card.stats { border-color: #4c9b43; }
+    .menu-card.customize { border-color: #7d858f; }
+    .menu-card.history::after { background: linear-gradient(180deg, rgba(4,7,18,.12) 22%, rgba(4,7,18,.9) 100%); }
+    .menu-card-desc { margin: 0; color: var(--ink-soft); font-size: 13px; }
+
+    .home-footer-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
+    .mini-stat { padding: 17px 19px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); }
+    .mini-stat-label { margin-bottom: 7px; color: var(--ink-soft); font-size: 12px; font-weight: 650; }
+    .mini-stat-value { font-size: 27px; font-weight: 750; letter-spacing: -.05em; }
+
+    .section-block { margin-top: 28px; }
+    .section-title-row { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 14px; }
+    .section-title-row h3 { margin: 0; font-size: 18px; }
+
+    .panel { padding: 22px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); }
+    .panel + .panel { margin-top: 14px; }
+
+    .inline-form { display: flex; gap: 10px; align-items: end; }
+    .inline-form .field-wrap { flex: 1; }
+
+    .players-list { display: grid; gap: 9px; }
+
+    .player-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      min-height: 64px;
+      padding: 10px 12px 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--surface-soft);
+    }
+
+    .player-info { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .player-avatar { width: 36px; height: 36px; flex: 0 0 auto; display: grid; place-items: center; overflow: hidden; border-radius: 12px; color: var(--primary); background: var(--primary-soft); font-size: 13px; font-weight: 800; }
+    .avatar img, .player-avatar img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .player-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 750; }
+    .player-sub { color: var(--ink-faint); font-size: 12px; }
+    .player-elo { color: var(--primary); font-size: 12px; font-weight: 750; }
+    .row-actions { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; }
+    .icon-btn { width: 36px; height: 36px; display: inline-grid; place-items: center; border: 1px solid transparent; border-radius: 10px; color: var(--ink-soft); background: transparent; font-size: 17px; }
+    .icon-btn:hover { color: var(--primary); background: #edf1ff; }
+    .icon-btn.danger:hover { color: var(--danger); background: var(--danger-soft); }
+
+    .edit-row { display: flex; align-items: center; gap: 8px; width: 100%; }
+    .edit-row .text-input { min-height: 41px; }
+
+    .empty-state { padding: 35px 20px; color: var(--ink-soft); text-align: center; }
+    .empty-state .empty-icon { margin-bottom: 11px; font-size: 30px; }
+    .empty-state p { margin: 0; }
+
+    .stepper { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 26px; }
+    .step { display: flex; align-items: center; gap: 9px; padding: 11px 13px; color: var(--ink-faint); border-bottom: 2px solid var(--line); font-size: 13px; font-weight: 700; }
+    .step-number { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; color: var(--ink-faint); background: #eef1f5; font-size: 12px; }
+    .step.active { color: var(--primary); border-color: var(--primary); }
+    .step.active .step-number { color: #fff; background: var(--primary); }
+    .step.done { color: var(--teal); border-color: var(--teal); }
+    .step.done .step-number { color: #fff; background: var(--teal); }
+
+    .choice-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; max-width: 690px; }
+    .choice-btn { min-height: 74px; padding: 12px 8px; border: 1px solid var(--line); border-radius: var(--radius-sm); color: var(--ink-soft); background: var(--surface); font-weight: 750; }
+    .choice-btn:hover { border-color: #aebdf0; color: var(--primary); background: var(--primary-soft); }
+    .choice-btn.is-selected { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); box-shadow: inset 0 0 0 1px var(--primary); }
+    .choice-btn strong { display: block; color: inherit; font-size: 27px; line-height: 1; letter-spacing: -.05em; }
+    .choice-btn span { display: block; margin-top: 5px; font-size: 11px; font-weight: 650; }
+
+    .selection-summary { margin-top: 20px; color: var(--ink-soft); font-size: 13px; }
+    .selection-summary strong { color: var(--ink); }
+    .selection-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 17px; }
+    .player-select-btn { min-height: 68px; display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius-sm); color: var(--ink); text-align: left; background: var(--surface); }
+    .player-select-btn:hover:not(:disabled) { border-color: #aebdf0; background: #f8faff; }
+    .player-select-btn.selected { border-color: var(--primary); background: var(--primary-soft); box-shadow: inset 0 0 0 1px var(--primary); }
+    .player-select-btn:disabled:not(.selected) { cursor: not-allowed; opacity: .47; }
+    .select-check { width: 22px; height: 22px; flex: 0 0 auto; display: grid; place-items: center; border: 1px solid #ccd4e0; border-radius: 7px; color: transparent; background: #fff; font-size: 13px; font-weight: 900; }
+    .player-select-btn.selected .select-check { border-color: var(--primary); color: #fff; background: var(--primary); }
+    .selection-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 22px; }
+
+    .game-topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 13px; }
+    .game-topline h2 { margin: 0; font-size: 18px; letter-spacing: -.03em; }
+    .game-topline p { margin: 0; color: var(--ink-faint); font-size: 12px; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; }
+    .game-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface); }
+    .game-actor { display: flex; align-items: center; gap: 8px; color: var(--ink-soft); font-size: 12px; font-weight: 800; }
+    .game-actor .tier-select { min-width: 132px; min-height: 37px; padding-top: 6px; padding-bottom: 6px; }
+    .life-grid { display: grid; grid-template-columns: 1fr; gap: 22px; }
+    .life-grid.players-2 { grid-template-columns: 1fr; }
+    .table-side { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .table-side.seats-1 { grid-template-columns: 1fr; }
+    .table-side-top { transform: rotate(180deg); }
+    .life-card { position: relative; isolation: isolate; display: grid; grid-template-rows: auto 1fr auto; min-height: 226px; overflow: hidden; border: 1px solid var(--line); border: 1px solid color-mix(in srgb, var(--life-accent) 34%, var(--line)); border-radius: 22px; color: #132143; background: #f8f9ff; background: linear-gradient(145deg, color-mix(in srgb, var(--life-accent) 17%, #fff), #fff 68%); box-shadow: 0 12px 24px rgba(33,52,92,.08); }
+    .life-card::after { position: absolute; z-index: -1; right: -30px; bottom: -54px; width: 145px; height: 145px; border-radius: 50%; content: ""; background: rgba(82,102,215,.12); background: color-mix(in srgb, var(--life-accent) 15%, transparent); }
+    .life-card.low-life { border-color: var(--danger); border-color: color-mix(in srgb, var(--danger) 50%, var(--line)); background: #fff3f2; background: linear-gradient(145deg, #fff3f2, #fff 70%); }
+    .life-player-head { display: flex; align-items: center; gap: 9px; min-width: 0; padding: 13px 14px 0; pointer-events: none; }
+    .life-player-head .player-avatar { width: 34px; height: 34px; border: 2px solid rgba(255,255,255,.9); box-shadow: 0 3px 10px rgba(33,52,92,.15); }
+    .life-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 850; }
+    .life-label { color: var(--ink-faint); font-size: 11px; font-weight: 700; }
+    .life-value { align-self: center; justify-self: center; padding: 16px 8px; color: var(--life-accent); font-size: clamp(66px, 17vw, 106px); font-weight: 850; line-height: .78; letter-spacing: -.095em; text-align: center; pointer-events: none; }
+    .life-card.low-life .life-value { color: var(--danger); }
+    .counter-open-btn { position: absolute; z-index: 4; top: 11px; right: 11px; width: 30px; height: 30px; display: grid; place-items: center; padding: 0; border: 1px solid var(--line); border: 1px solid color-mix(in srgb, var(--life-accent) 50%, #fff); border-radius: 9px; color: var(--life-accent); background: rgba(255,255,255,.84); box-shadow: 0 3px 8px rgba(17,31,76,.13); font-size: 22px; font-weight: 500; line-height: 1; }
+    .counter-open-btn:active { color: #fff; background: var(--life-accent); transform: translateY(1px); }
+    .life-counter-indicators { position: absolute; z-index: 3; top: 52px; right: 11px; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 5px; max-width: calc(100% - 22px); pointer-events: none; }
+    .counter-indicator { min-height: 24px; display: inline-flex; align-items: center; gap: 4px; padding: 3px 6px 3px 3px; border: 1px solid rgba(255,255,255,.7); border-radius: 999px; color: #fff; background: rgba(17,27,55,.78); box-shadow: 0 3px 9px rgba(11,21,42,.17); font-size: 11px; font-weight: 850; }
+    .counter-indicator img { width: 18px; height: 18px; border-radius: 50%; object-fit: cover; }
+    .counter-source-avatar { width: 18px; height: 18px; display: grid; place-items: center; overflow: hidden; border-radius: 50%; color: #fff; background: var(--life-accent); font-size: 8px; font-weight: 850; }
+    .counter-source-avatar img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; }
+    .life-tap-zone { position: absolute; z-index: 1; top: 52px; bottom: 42px; width: 50%; border: 0; color: transparent; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .life-tap-zone::after { position: absolute; top: 50%; color: rgba(82,102,215,.34); color: color-mix(in srgb, var(--life-accent) 32%, transparent); font-size: 28px; font-weight: 500; transform: translateY(-50%); transition: transform .15s ease, color .15s ease; }
+    .life-tap-zone:active::after { color: var(--life-accent); transform: translateY(-50%) scale(1.16); }
+    .life-tap-zone.subtract { left: 0; }
+    .life-tap-zone.subtract::after { left: 16px; content: "−"; }
+    .life-tap-zone.add { right: 0; }
+    .life-tap-zone.add::after { right: 16px; content: "+"; }
+    .life-adjustments { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 7px; padding: 0 10px 10px; }
+    .life-btn { min-height: 34px; border: 1px solid var(--line); border: 1px solid color-mix(in srgb, var(--life-accent) 23%, var(--line)); border-radius: 10px; color: var(--life-accent); background: rgba(255,255,255,.7); font-size: 13px; font-weight: 850; }
+    .life-btn:active { color: #fff; background: var(--life-accent); transform: translateY(1px); }
+    .game-finish-bar { position: sticky; z-index: 4; bottom: 10px; display: flex; justify-content: center; margin-top: 14px; padding: 9px; border: 1px solid rgba(19,33,67,.12); border-radius: 17px; background: rgba(255,255,255,.88); box-shadow: 0 10px 25px rgba(33,52,92,.14); backdrop-filter: blur(14px); }
+    .game-finish-bar .btn { width: 100%; }
+    .life-grid.players-5 .life-card, .life-grid.players-6 .life-card { min-height: 196px; }
+    .plane-game-view { display: grid; justify-items: center; gap: 17px; }
+    .plane-frame { position: relative; width: min(100%, 720px); aspect-ratio: 10 / 7; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-soft); box-shadow: var(--shadow); }
+    .plane-frame img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .plane-caption { position: absolute; right: 0; bottom: 0; left: 0; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 17px; color: #fff; background: linear-gradient(transparent, rgba(12,18,38,.8)); }
+    .plane-caption span { color: rgba(255,255,255,.78); font-size: 12px; }
+    .plane-controls { display: flex; align-items: center; gap: 18px; color: var(--ink-soft); font-weight: 750; }
+
+    .position-list { display: grid; gap: 8px; }
+    .position-choice { display: grid; grid-template-columns: minmax(0, 1fr) 96px; align-items: center; gap: 12px; padding: 9px 11px; border-radius: var(--radius-sm); background: var(--surface-soft); }
+    .position-player { display: flex; align-items: center; gap: 9px; min-width: 0; }
+    .position-player .player-avatar { width: 31px; height: 31px; border-radius: 9px; font-size: 11px; }
+    .position-player strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .position-select { min-height: 40px; }
+
+    .history-list { display: grid; gap: 11px; }
+    .match-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 17px 18px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); }
+    .match-main { min-width: 0; }
+    .match-top { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+    .match-date { color: var(--ink-faint); font-size: 12px; }
+    .status-badge { display: inline-flex; align-items: center; min-height: 23px; padding: 3px 8px; border-radius: 999px; color: var(--teal); background: var(--teal-soft); font-size: 11px; font-weight: 800; }
+    .status-badge.friendly { color: #a66521; background: var(--orange-soft); }
+    .match-title { margin-bottom: 4px; font-weight: 800; }
+    .match-summary { overflow: hidden; color: var(--ink-soft); text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+    .match-winner { margin-top: 4px; color: var(--teal); font-size: 12px; font-weight: 750; }
+    .match-actions { display: flex; gap: 5px; }
+
+    .tournament-list { display: grid; gap: 12px; }
+    .tournament-item { padding: 19px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); }
+    .tournament-head { display: flex; align-items: start; justify-content: space-between; gap: 14px; }
+    .tournament-name { margin: 0 0 5px; font-size: 18px; font-weight: 800; }
+    .tournament-meta { color: var(--ink-soft); font-size: 13px; }
+    .tournament-details { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: 13px; }
+    .tournament-details strong { color: var(--ink); }
+
+    .ranking-layout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(270px, .85fr); gap: 14px; align-items: start; }
+    .ranking-table { display: grid; gap: 8px; }
+    .ranking-row { display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; align-items: center; gap: 12px; min-height: 65px; padding: 9px 13px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-soft); }
+    .ranking-row.is-current { border-color: #c7d4ff; background: var(--primary-soft); }
+    .ranking-position { color: var(--ink-faint); font-size: 18px; font-weight: 800; text-align: center; }
+    .ranking-row:nth-child(1) .ranking-position { color: var(--orange); }
+    .ranking-row:nth-child(2) .ranking-position { color: #708093; }
+    .ranking-row:nth-child(3) .ranking-position { color: #a66e44; }
+    .ranking-player { display: flex; align-items: center; gap: 11px; min-width: 0; }
+    .ranking-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 800; }
+    .ranking-you { display: inline-flex; margin-left: 6px; padding: 2px 6px; border-radius: 999px; color: var(--primary); background: #fff; font-size: 10px; font-weight: 800; }
+    .ranking-score { color: var(--primary); font-size: 21px; font-weight: 850; letter-spacing: -.04em; text-align: right; }
+    .ranking-score-label { color: var(--ink-faint); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .ranking-note { margin: 0; color: var(--ink-soft); font-size: 13px; }
+    .elo-config-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; margin-top: 16px; }
+    .elo-config-item { padding: 13px; border-radius: var(--radius-sm); background: var(--surface-soft); }
+    .elo-config-label { color: var(--ink-soft); font-size: 11px; font-weight: 650; }
+    .elo-config-value { margin-top: 4px; font-size: 19px; font-weight: 800; }
+    .tier-table { width: 100%; margin-top: 16px; border-collapse: collapse; font-size: 12px; }
+    .tier-table th, .tier-table td { padding: 8px 5px; border-bottom: 1px solid var(--line); text-align: left; }
+    .tier-table th { color: var(--ink-faint); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+    .tier-table td:not(:first-child) { color: var(--primary); font-weight: 750; text-align: right; }
+
+    .tier-selection { display: grid; gap: 8px; margin-top: 19px; padding-top: 18px; border-top: 1px solid var(--line); }
+    .tier-selection-title { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+    .tier-selection-title h4 { margin: 0; font-size: 15px; }
+    .tier-row { display: grid; grid-template-columns: minmax(0, 1fr) 140px; align-items: center; gap: 12px; padding: 9px 11px; border-radius: var(--radius-sm); background: var(--surface-soft); }
+    .tier-player { display: flex; align-items: center; gap: 9px; min-width: 0; }
+    .tier-player .player-avatar { width: 30px; height: 30px; border-radius: 9px; font-size: 11px; }
+    .tier-select { min-height: 40px; width: 100%; padding: 0 10px; border: 1px solid var(--line); border-radius: 10px; color: var(--ink); background: #fff; }
+
+    .bonus-panel { margin-top: 18px; }
+    .bonus-grid { display: grid; gap: 8px; margin-top: 14px; }
+    .bonus-row { display: grid; grid-template-columns: minmax(0, 1fr) repeat(3, minmax(78px, 110px)); gap: 8px; align-items: center; padding: 10px 11px; border-radius: var(--radius-sm); background: var(--surface-soft); }
+    .bonus-player { min-width: 0; font-size: 13px; font-weight: 750; }
+    .bonus-check { display: flex; align-items: center; justify-content: center; gap: 4px; color: var(--ink-soft); font-size: 11px; text-align: center; }
+    .bonus-check input { width: 16px; height: 16px; accent-color: var(--primary); }
+    .bonus-header { display: grid; grid-template-columns: minmax(0, 1fr) repeat(3, minmax(78px, 110px)); gap: 8px; padding: 0 11px; color: var(--ink-faint); font-size: 10px; font-weight: 750; letter-spacing: .06em; text-align: center; text-transform: uppercase; }
+
+    .rules-panel { max-width: 790px; }
+    .rules-panel .panel-intro { margin-bottom: 16px; }
+    .rules-panel .panel-intro p { margin: 0; color: var(--ink-soft); font-size: 13px; }
+    .rules-actions { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
+    .save-note { min-height: 20px; color: var(--teal); font-size: 13px; font-weight: 650; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
+    .stat-wide { grid-column: span 2; }
+    .stat-table-panel { overflow: hidden; }
+    .stat-player-table { overflow-x: auto; }
+    .stat-player-row { display: grid; grid-template-columns: minmax(190px, 1.4fr) repeat(4, minmax(75px, .6fr)); align-items: center; gap: 12px; min-height: 54px; padding: 7px 9px; border-bottom: 1px solid var(--line); font-size: 13px; text-align: right; }
+    .stat-player-row:last-child { border-bottom: 0; }
+    .stat-player-row > :first-child { text-align: left; }
+    .stat-player-row > span { color: var(--ink-soft); font-weight: 750; }
+    .stat-header { min-height: 35px; color: var(--ink-faint); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .stat-header span { color: var(--ink-faint); }
+
+    .plane-groups { display: grid; gap: 12px; margin-top: 14px; }
+    .plane-group { padding: 18px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); }
+    .plane-group-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    .plane-group-head h3 { margin: 0; }
+    .custom-plane-list { display: grid; gap: 8px; }
+    .custom-plane-row { display: grid; grid-template-columns: 88px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 8px; border-radius: var(--radius-sm); background: var(--surface-soft); }
+    .plane-thumb { width: 88px; aspect-ratio: 10 / 7; display: block; object-fit: cover; border-radius: 9px; background: #e8edf5; }
+    .custom-plane-main { min-width: 0; display: grid; gap: 6px; }
+    .custom-plane-main .text-input { min-height: 38px; }
+    .plane-active { display: flex; align-items: center; gap: 7px; color: var(--ink-soft); font-size: 12px; }
+    .plane-active input { accent-color: var(--primary); }
+    .plane-upload-label { margin-top: 12px; }
+
+    .modal-backdrop { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 18px; background: rgba(23,36,59,.52); backdrop-filter: blur(5px); }
+    .modal { width: min(100%, 490px); max-height: min(90vh, 700px); overflow: auto; padding: 25px; border: 1px solid rgba(255,255,255,.55); border-radius: 23px; background: var(--surface); box-shadow: 0 25px 70px rgba(11,21,42,.27); animation: modal-in .18s ease both; }
+    @keyframes modal-in { from { opacity: 0; transform: translateY(7px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .modal h3 { margin-bottom: 8px; font-size: 23px; }
+    .modal-copy { margin-bottom: 20px; color: var(--ink-soft); font-size: 14px; }
+    .modal-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 9px; margin-top: 21px; }
+    .modal-choice-list { display: grid; gap: 9px; }
+    .modal-choice { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 62px; padding: 13px 15px; border: 1px solid var(--line); border-radius: var(--radius-sm); color: var(--ink); text-align: left; background: var(--surface-soft); }
+    .modal-choice:hover { border-color: #aebdf0; background: var(--primary-soft); }
+    .modal-choice-label { font-weight: 750; }
+    .modal-choice-sub { margin-top: 2px; color: var(--ink-soft); font-size: 12px; }
+    .modal-choice-symbol { font-size: 19px; }
+    .counter-list { display: grid; gap: 9px; }
+    .counter-section-title { margin: 18px 0 8px; color: var(--ink-faint); font-size: 11px; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+    .counter-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 13px; background: var(--surface-soft); }
+    .counter-kind { display: flex; align-items: center; gap: 9px; min-width: 0; font-size: 13px; font-weight: 800; }
+    .counter-kind img { width: 31px; height: 31px; flex: 0 0 auto; border-radius: 50%; object-fit: cover; }
+    .counter-kind .counter-source-avatar { width: 31px; height: 31px; flex: 0 0 auto; font-size: 11px; }
+    .counter-stepper { display: grid; grid-template-columns: 32px 34px 32px; align-items: center; gap: 6px; }
+    .counter-stepper button { width: 32px; height: 32px; display: grid; place-items: center; padding: 0; border: 1px solid var(--line); border-radius: 9px; color: var(--primary); background: #fff; font-size: 19px; font-weight: 700; }
+    .counter-stepper button:active { color: #fff; background: var(--primary); }
+    .counter-value { color: var(--ink); font-size: 17px; font-weight: 850; text-align: center; }
+    .detail-table { display: grid; gap: 0; margin-top: 13px; border-top: 1px solid var(--line); }
+    .detail-line { display: flex; justify-content: space-between; gap: 18px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+    .detail-line span:first-child { color: var(--ink-soft); }
+    .detail-line strong { text-align: right; }
+    .detail-subheading { margin: 20px 0 9px; font-size: 15px; }
+    .life-result-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 11px; border-radius: 10px; background: var(--surface-soft); font-size: 13px; }
+    .life-result-row + .life-result-row { margin-top: 6px; }
+    .life-result-row strong { color: var(--primary); }
+
+    .toast-region { position: fixed; right: 18px; bottom: 18px; z-index: 100; display: grid; gap: 8px; width: min(340px, calc(100% - 36px)); }
+    .toast { padding: 13px 15px; border: 1px solid #b9e7df; border-radius: 13px; color: #08746d; background: #ecfbf8; box-shadow: var(--shadow); font-size: 13px; font-weight: 700; animation: toast-in .18s ease both; }
+    .toast.error { border-color: #f4c6ce; color: #a5364c; background: #fff1f3; }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 760px) {
+      .login-layout { display: block; max-width: 520px; }
+      .login-intro { min-height: 310px; padding: 31px 28px; }
+      .intro-copy { margin-top: 35px; }
+      .intro-copy h1 { font-size: 38px; }
+      .intro-copy p:not(.eyebrow) { font-size: 15px; }
+      .intro-footer { margin-top: 28px; }
+      .login-form-panel { padding: 31px 28px 35px; }
+      .header-inner, .main-inner { width: min(100% - 28px, var(--content-width)); }
+      .header-inner { min-height: 67px; }
+      .user-pill { padding-right: 7px; }
+      .user-pill span:last-child { display: none; }
+      .sync-status { width: 30px; justify-content: center; padding: 5px; font-size: 0; }
+      .main-inner { padding-top: 28px; }
+      .screen-heading, .game-topline { align-items: flex-start; flex-direction: column; gap: 14px; }
+      .heading-actions { justify-content: flex-start; }
+      .quick-start { align-items: flex-start; flex-direction: column; }
+      .quick-start .btn { width: 100%; }
+      .ranking-layout { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 761px) {
+      .table-side.seats-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 560px) {
+      .menu-grid, .home-footer-stats { grid-template-columns: 1fr; }
+      .choice-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .selection-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .step { padding: 10px 5px; justify-content: center; }
+      .step-label { display: none; }
+      .step-number { flex: 0 0 auto; }
+      .match-row { grid-template-columns: 1fr; gap: 12px; }
+      .match-actions { justify-content: flex-start; }
+      .inline-form { align-items: stretch; flex-direction: column; }
+      .inline-form .btn { width: 100%; }
+      .selection-footer, .game-finish-bar { align-items: stretch; flex-direction: column; }
+      .selection-footer .btn, .game-finish-bar .btn { width: 100%; }
+      .panel { padding: 18px; }
+      .screen-heading h2 { font-size: 29px; }
+      .heading-actions { width: 100%; }
+      .heading-actions .btn { flex: 1; }
+      .bonus-row, .bonus-header { grid-template-columns: minmax(0, 1fr) repeat(3, minmax(55px, 1fr)); }
+      .bonus-check { flex-direction: column; }
+      .bonus-header { font-size: 9px; }
+      .game-controls { align-items: stretch; flex-direction: column; }
+      .game-actor { justify-content: space-between; }
+      .game-actor .tier-select { flex: 1; }
+      .plane-group-head { align-items: flex-start; flex-direction: column; }
+    }
+
+    @media (max-width: 380px) {
+      .login-intro, .login-form-panel { padding-left: 21px; padding-right: 21px; }
+      .selection-grid { grid-template-columns: 1fr; }
+      .choice-btn { min-height: 65px; }
+      .tier-row { grid-template-columns: 1fr; }
+      .elo-config-grid { grid-template-columns: 1fr; }
+      .bonus-row, .bonus-header { grid-template-columns: minmax(0, 1fr) repeat(3, 45px); padding-left: 5px; padding-right: 5px; }
+      .bonus-header { gap: 3px; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .stat-wide { grid-column: auto; }
+      .custom-plane-row { grid-template-columns: 70px minmax(0, 1fr) auto; gap: 7px; }
+      .plane-thumb { width: 70px; }
+      .position-choice { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="app-shell"></div>
+  <div id="modal-root"></div>
+  <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    (() => {
+      "use strict";
+
+      const STORAGE_KEY = "ronda-amigos-prototipo-v1";
+      const SESSION_KEY = "ronda-amigos-session-v1";
+      const ELO_CONFIG = { initialSecret: 1000, visibleOffset: 900, k: 20 };
+      const MISSCLICK_WINDOW_MS = 5000;
+      const REMOTE_TABLE = "serio_rooms";
+      const SYNC_CONFIG = window.SERIO_SYNC_CONFIG || {};
+      const LIFE_ACCENTS = ["#5266d7", "#008b83", "#c76132", "#8b5ab8", "#b13b63", "#3f7fbb"];
+      const DECK_TIERS = {
+        1: { label: "Tier 1", gain: 1.4, loss: 0.7 },
+        2: { label: "Tier 2", gain: 1.2, loss: 0.85 },
+        3: { label: "Tier 3", gain: 1, loss: 1 },
+        4: { label: "Tier 4", gain: 0.8, loss: 1.2 },
+        5: { label: "Tier 5", gain: 0.6, loss: 1.4 }
+      };
+      const app = document.getElementById("app");
+      const modalRoot = document.getElementById("modal-root");
+      const toastRegion = document.getElementById("toast-region");
+
+      const seedRules = `1. Antes de empezar, todos los jugadores deben estar registrados en la lista de jugadores.
+
+2. Cada partida comienza con 40 vidas por jugador. Durante la partida se puede sumar o restar vida libremente.
+
+3. Al finalizar, la persona que registra la partida debe elegir un ganador y marcar si el resultado es serio o amistoso.
+
+4. Los resultados serios actualizan el ELO y el ranking. Los amistosos se guardan en el historial, pero no modifican la clasificación.
+
+5. En partidas de 3 o más jugadores se aplica +1 por participar. Los bonus de precon sin modificar, primera sangre y no usar comandante se suman después del tier.
+
+6. El historial se ordena de la partida más reciente a la más antigua. Borrar una partida revierte solo sus cambios de ELO asociados, sin recalcular las posteriores.
+
+7. Para torneos futuros se guardarán participantes, fechas, partidas y ganador en un registro independiente.`;
+
+      const createPlayerStats = () => ({ damageDealt: 0, damageReceived: 0, healingDone: 0, healingReceived: 0, biggestHit: 0, planesWalked: 0 });
+      const demoPlaneImage = (title, from, to) => `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 350"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${from}"/><stop offset="1" stop-color="${to}"/></linearGradient></defs><rect width="500" height="350" fill="url(#g)"/><circle cx="405" cy="70" r="90" fill="rgba(255,255,255,.18)"/><path d="M0 270 120 180 220 250 340 130 500 260V350H0Z" fill="rgba(14,24,58,.3)"/><text x="34" y="302" fill="white" font-family="Arial,sans-serif" font-size="28" font-weight="700">${title}</text></svg>`)}`;
+
+      const createDemoState = () => {
+        const players = [
+          { id: "p-carlos", name: "Carlos" },
+          { id: "p-ana", name: "Ana" },
+          { id: "p-beatriz", name: "Beatriz" },
+          { id: "p-diego", name: "Diego" },
+          { id: "p-lucia", name: "Lucía" },
+          { id: "p-marcos", name: "Marcos" }
+        ].map((player) => ({ ...player, eloSecret: ELO_CONFIG.initialSecret, eloVisible: ELO_CONFIG.initialSecret - ELO_CONFIG.visibleOffset }));
+        const demoDate = new Date();
+        demoDate.setHours(demoDate.getHours() - 3);
+        const planes = {
+          groups: [
+            { id: "group-demo-core", name: "Planos principales", planes: [
+              { id: "plane-demo-aether", name: "Aether", image: demoPlaneImage("Aether", "#3459d9", "#0d9e9b"), active: true },
+              { id: "plane-demo-ember", name: "Emberwild", image: demoPlaneImage("Emberwild", "#e67b38", "#7d3559"), active: true }
+            ] },
+            { id: "group-demo-night", name: "Nocturnos", planes: [
+              { id: "plane-demo-night", name: "Noche profunda", image: demoPlaneImage("Noche profunda", "#25294f", "#101426"), active: true }
+            ] }
+          ]
+        };
+        return {
+          version: 1,
+          players,
+          matches: [{
+            id: "match-demo-1",
+            playerIds: ["p-carlos", "p-ana", "p-beatriz"],
+            players: [
+              { id: "p-carlos", name: "Carlos", finalLife: 29 },
+              { id: "p-ana", name: "Ana", finalLife: 18 },
+              { id: "p-beatriz", name: "Beatriz", finalLife: 11 }
+            ],
+            winnerId: "p-carlos",
+            winnerName: "Carlos",
+            registeredBy: "Carlos",
+            resultType: "friendly",
+            elo: { enabled: false, applied: false, changes: {}, config: ELO_CONFIG, reversible: true },
+            startedAt: new Date(demoDate.getTime() - 31 * 60000).toISOString(),
+            finishedAt: demoDate.toISOString()
+          }],
+          tournaments: [{
+            id: "tournament-demo-1",
+            name: "Torneo de verano",
+            status: "En preparación",
+            date: "2026-08-15",
+            participantIds: ["p-carlos", "p-ana", "p-beatriz", "p-diego"],
+            matchIds: [],
+            winnerId: null
+          }],
+          statistics: {
+            players: Object.fromEntries(players.map((player) => [player.id, createPlayerStats()])),
+            highestElo: { playerId: players[0].id, playerName: players[0].name, elo: 100 }
+          },
+          planes,
+          rankingName: "Ranking de jugadores",
+          rules: seedRules
+        };
+      };
+
+      const fallbackStorage = {};
+      const storage = {
+        read() {
+          try {
+            const raw = window.localStorage.getItem(STORAGE_KEY);
+            return raw ? JSON.parse(raw) : null;
+          } catch (_) {
+            return fallbackStorage.data || null;
+          }
+        },
+        write(value) {
+          fallbackStorage.data = value;
+          try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(value)); } catch (_) { /* memoria de respaldo */ }
+        },
+        clear() {
+          delete fallbackStorage.data;
+          try { window.localStorage.removeItem(STORAGE_KEY); } catch (_) { /* memoria de respaldo */ }
+        }
+      };
+
+      const sessionStorage = {
+        read() {
+          try { return window.localStorage.getItem(SESSION_KEY); } catch (_) { return fallbackStorage.session || null; }
+        },
+        write(name) {
+          fallbackStorage.session = name;
+          try { window.localStorage.setItem(SESSION_KEY, name); } catch (_) { /* memoria de respaldo */ }
+        },
+        clear() {
+          delete fallbackStorage.session;
+          try { window.localStorage.removeItem(SESSION_KEY); } catch (_) { /* memoria de respaldo */ }
+        }
+      };
+
+      function normalizeState(value) {
+        const next = value && typeof value === "object" ? value : createDemoState();
+        next.version = 1;
+        next.players = Array.isArray(next.players) ? next.players : [];
+        next.matches = Array.isArray(next.matches) ? next.matches : [];
+        next.tournaments = Array.isArray(next.tournaments) ? next.tournaments : [];
+        next.rankingName = typeof next.rankingName === "string" && next.rankingName.trim() ? next.rankingName.trim() : "Ranking de jugadores";
+        next.rules = typeof next.rules === "string" ? next.rules : seedRules;
+        next.planes = next.planes && typeof next.planes === "object" ? next.planes : { groups: [] };
+        next.planes.groups = Array.isArray(next.planes.groups) ? next.planes.groups : [];
+        next.planes.groups.forEach((group) => {
+          if (!Array.isArray(group.planes)) group.planes = [];
+          group.planes.forEach((plane) => { if (typeof plane.active !== "boolean") plane.active = true; });
+        });
+        next.statistics = next.statistics && typeof next.statistics === "object" ? next.statistics : {};
+        next.statistics.players = next.statistics.players && typeof next.statistics.players === "object" ? next.statistics.players : {};
+        next.statistics.highestElo = next.statistics.highestElo && typeof next.statistics.highestElo === "object" ? next.statistics.highestElo : { playerId: null, playerName: "—", elo: 100 };
+        if (!Number.isFinite(Number(next.statistics.highestElo.elo))) next.statistics.highestElo.elo = 100;
+        next.players.forEach((player) => {
+          if (!Number.isFinite(Number(player.eloSecret))) player.eloSecret = ELO_CONFIG.initialSecret;
+          player.eloSecret = Math.round(Number(player.eloSecret));
+          player.eloVisible = player.eloSecret - ELO_CONFIG.visibleOffset;
+          if (!next.statistics.players[player.id] || typeof next.statistics.players[player.id] !== "object") next.statistics.players[player.id] = createPlayerStats();
+          const playerStats = next.statistics.players[player.id];
+          ["damageDealt", "damageReceived", "healingDone", "healingReceived", "biggestHit", "planesWalked"].forEach((key) => { if (!Number.isFinite(Number(playerStats[key]))) playerStats[key] = 0; });
+          if (typeof player.photo !== "string") player.photo = "";
+        });
+        next.matches.forEach((match) => {
+          if (!match.elo || typeof match.elo !== "object") match.elo = { enabled: match.resultType === "serious", applied: false, changes: {}, reversible: true };
+          if (!match.elo.changes || typeof match.elo.changes !== "object") match.elo.changes = {};
+          if (typeof match.elo.reversible !== "boolean") match.elo.reversible = true;
+        });
+        return next;
+      }
+
+      let state = normalizeState(storage.read() || createDemoState());
+      storage.write(state);
+      const savedSession = sessionStorage.read();
+      let currentUser = state.players.some((player) => player.name === savedSession) ? savedSession : null;
+      let currentScreen = "home";
+      let editingPlayerId = null;
+      let gameDraft = null;
+      let selectedMatchId = null;
+      let remoteClient = null;
+      let remoteChannel = null;
+      let remoteRevision = 0;
+      let remoteSaveTimer = null;
+      let isApplyingRemoteState = false;
+      let syncPhase = "local";
+
+      const remoteRoomCode = String(SYNC_CONFIG.roomCode || "serio-amigos").trim().toLowerCase();
+      const isRemoteConfigured = () => Boolean(String(SYNC_CONFIG.supabaseUrl || "").trim() && String(SYNC_CONFIG.supabasePublishableKey || "").trim());
+      const cloneForRemote = (value) => JSON.parse(JSON.stringify(value));
+
+      function normalizeRemoteGame(value) {
+        if (!value || typeof value !== "object" || !Array.isArray(value.selectedIds) || !value.selectedIds.length) return null;
+        const selectedIds = value.selectedIds.filter((id) => state.players.some((player) => player.id === id));
+        if (!selectedIds.length) return null;
+        const next = { ...createGameDraft(), ...value, selectedIds };
+        next.lives = next.lives && typeof next.lives === "object" ? next.lives : {};
+        next.tiers = next.tiers && typeof next.tiers === "object" ? next.tiers : {};
+        next.bonuses = next.bonuses && typeof next.bonuses === "object" ? next.bonuses : {};
+        next.positions = next.positions && typeof next.positions === "object" ? next.positions : {};
+        next.lifeOperations = Array.isArray(next.lifeOperations) ? next.lifeOperations : [];
+        next.counters = next.counters && typeof next.counters === "object" ? next.counters : {};
+        return next;
+      }
+
+      function syncStatusLabel() {
+        if (syncPhase === "online") return "Sincronizado";
+        if (syncPhase === "saving") return "Guardando";
+        if (syncPhase === "connecting") return "Conectando";
+        if (syncPhase === "error") return "Sin conexión";
+        return "Solo este dispositivo";
+      }
+
+      function renderSyncStatus() {
+        return `<span class="sync-status is-${syncPhase}" title="${syncStatusLabel()}">${syncStatusLabel()}</span>`;
+      }
+
+      const saveState = () => { storage.write(state); queueRemoteSave(); };
+      const saveGameDraft = () => queueRemoteSave();
+      const playerById = (id) => state.players.find((player) => player.id === id);
+      const playerByIdByName = (name) => state.players.find((player) => player.name === name);
+      const visibleElo = (player) => Number.isFinite(Number(player?.eloSecret)) ? Math.round(Number(player.eloSecret) - ELO_CONFIG.visibleOffset) : 100;
+      const formatElo = (value) => Math.round(Number(value) || 0).toLocaleString("es-ES");
+      const formatDelta = (value) => `${Number(value) >= 0 ? "+" : ""}${formatElo(value)}`;
+      const renderAvatar = (player, className = "player-avatar") => player?.photo ? `<span class="${className} has-photo"><img src="${escapeHtml(player.photo)}" alt=""></span>` : `<span class="${className}" aria-hidden="true">${escapeHtml(initials(player?.name || "?"))}</span>`;
+      const randomActivePlanes = () => {
+        const planes = state.planes.groups.flatMap((group) => group.planes.filter((plane) => plane.active).map((plane) => ({ ...plane, groupName: group.name })));
+        for (let index = planes.length - 1; index > 0; index -= 1) {
+          const swapIndex = Math.floor(Math.random() * (index + 1));
+          [planes[index], planes[swapIndex]] = [planes[swapIndex], planes[index]];
+        }
+        return planes;
+      };
+      const initials = (name) => name.trim().split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
+      const escapeHtml = (value) => String(value).replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[character]));
+      const formatDate = (iso, withTime = true) => {
+        const date = new Date(iso);
+        if (Number.isNaN(date.getTime())) return "Fecha desconocida";
+        return new Intl.DateTimeFormat("es-ES", withTime ? { dateStyle: "medium", timeStyle: "short" } : { dateStyle: "medium" }).format(date);
+      };
+      const formatTournamentDate = (date) => {
+        if (!date) return "Fecha por decidir";
+        return new Intl.DateTimeFormat("es-ES", { dateStyle: "long" }).format(new Date(`${date}T12:00:00`));
+      };
+      const uid = (prefix) => `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      const plural = (number, singular, pluralWord) => `${number} ${number === 1 ? singular : pluralWord}`;
+      const createPlayerBonuses = () => ({ precon: false, firstBlood: false, noCommanderAbilities: false });
+      const createCounterEntry = () => ({ poison: 0, radiation: 0, commander: {} });
+      const createCounterState = (ids = []) => Object.fromEntries(ids.map((id) => [id, createCounterEntry()]));
+      const createGameDraft = () => ({ stage: "count", count: 0, selectedIds: [], lives: {}, tiers: {}, bonuses: {} });
+      const go = (screen) => { currentScreen = screen; editingPlayerId = null; render(); window.scrollTo({ top: 0, behavior: "smooth" }); };
+
+      function ensureGameCounters() {
+        if (!gameDraft) return {};
+        if (!gameDraft.counters || typeof gameDraft.counters !== "object") gameDraft.counters = {};
+        gameDraft.selectedIds.forEach((id) => {
+          if (!gameDraft.counters[id] || typeof gameDraft.counters[id] !== "object") gameDraft.counters[id] = createCounterEntry();
+          const counters = gameDraft.counters[id];
+          counters.poison = Math.max(0, Number(counters.poison) || 0);
+          counters.radiation = Math.max(0, Number(counters.radiation) || 0);
+          if (!counters.commander || typeof counters.commander !== "object") counters.commander = {};
+          Object.keys(counters.commander).forEach((sourceId) => {
+            const value = Math.max(0, Number(counters.commander[sourceId]) || 0);
+            if (value) counters.commander[sourceId] = value;
+            else delete counters.commander[sourceId];
+          });
+        });
+        return gameDraft.counters;
+      }
+
+      function renderCounterIndicators(targetId) {
+        const counters = ensureGameCounters()[targetId] || createCounterEntry();
+        const indicators = [];
+        if (counters.poison) indicators.push(`<span class="counter-indicator" aria-label="${counters.poison} contadores de veneno"><img src="assets/counters/VenenoContador.png" alt=""><strong>${counters.poison}</strong></span>`);
+        if (counters.radiation) indicators.push(`<span class="counter-indicator" aria-label="${counters.radiation} contadores de radiación"><img src="assets/counters/RadiacionContador.png" alt=""><strong>${counters.radiation}</strong></span>`);
+        Object.entries(counters.commander || {}).filter(([, value]) => Number(value) > 0).forEach(([sourceId, value]) => {
+          const source = playerById(sourceId);
+          if (source) indicators.push(`<span class="counter-indicator" aria-label="${value} de daño de comandante de ${escapeHtml(source.name)}">${renderAvatar(source, "counter-source-avatar")}<strong>${value}</strong></span>`);
+        });
+        return indicators.length ? `<div class="life-counter-indicators">${indicators.join("")}</div>` : "";
+      }
+
+      function applyRemoteRoom(row) {
+        if (!row || !row.state || typeof row.state !== "object") return;
+        isApplyingRemoteState = true;
+        state = normalizeState(row.state);
+        storage.write(state);
+        gameDraft = normalizeRemoteGame(row.active_game);
+        remoteRevision = Number(row.revision) || remoteRevision;
+        if (currentUser && !state.players.some((player) => player.name === currentUser)) {
+          currentUser = null;
+          sessionStorage.clear();
+        }
+        if (gameDraft?.stage === "playing") currentScreen = "game";
+        else if (currentScreen === "game") currentScreen = "history";
+        isApplyingRemoteState = false;
+        render();
+      }
+
+      async function loadRemoteRoom(createWhenMissing = false) {
+        if (!remoteClient) return false;
+        const { data, error } = await remoteClient.from(REMOTE_TABLE).select("room_code,state,active_game,revision").eq("room_code", remoteRoomCode).maybeSingle();
+        if (error) {
+          syncPhase = "error";
+          render();
+          return false;
+        }
+      if (data) {
+        applyRemoteRoom(data);
+        if (remoteChannel) {
+          syncPhase = "online";
+          render();
+        }
+        return true;
+      }
+        if (!createWhenMissing) return false;
+        const payload = { room_code: remoteRoomCode, state: cloneForRemote(state), active_game: gameDraft ? cloneForRemote(gameDraft) : null, revision: 1 };
+        const created = await remoteClient.from(REMOTE_TABLE).insert(payload).select("room_code,state,active_game,revision").maybeSingle();
+        if (created.error || !created.data) {
+          return loadRemoteRoom(false);
+        }
+        applyRemoteRoom(created.data);
+        return true;
+      }
+
+      function subscribeToRemoteRoom() {
+        if (!remoteClient || remoteChannel) return;
+        remoteChannel = remoteClient.channel(`serio-room-${remoteRoomCode}`).on("postgres_changes", { event: "UPDATE", schema: "public", table: REMOTE_TABLE, filter: `room_code=eq.${remoteRoomCode}` }, (payload) => {
+          const incomingRevision = Number(payload.new?.revision) || 0;
+          if (incomingRevision > remoteRevision) {
+            applyRemoteRoom(payload.new);
+            showToast("Cambios sincronizados desde la mesa.");
+          }
+        }).subscribe((status) => {
+          if (status === "SUBSCRIBED") {
+            syncPhase = "online";
+            render();
+          }
+          if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+            syncPhase = "error";
+            render();
+          }
+        });
+      }
+
+      function queueRemoteSave() {
+        if (!remoteClient || syncPhase === "error" || isApplyingRemoteState) return;
+        window.clearTimeout(remoteSaveTimer);
+        syncPhase = "saving";
+        remoteSaveTimer = window.setTimeout(pushRemoteState, 350);
+      }
+
+      async function pushRemoteState() {
+        if (!remoteClient || isApplyingRemoteState) return;
+        const expectedRevision = remoteRevision;
+        const payload = { state: cloneForRemote(state), active_game: gameDraft ? cloneForRemote(gameDraft) : null, revision: expectedRevision + 1 };
+        const result = await remoteClient.from(REMOTE_TABLE).update(payload).eq("room_code", remoteRoomCode).eq("revision", expectedRevision).select("room_code,state,active_game,revision").maybeSingle();
+        if (result.error || !result.data) {
+          await loadRemoteRoom(false);
+          return;
+        }
+        remoteRevision = Number(result.data.revision) || expectedRevision + 1;
+        syncPhase = "online";
+        render();
+      }
+
+      async function initializeRemoteSync() {
+        if (!isRemoteConfigured()) return;
+        if (!/^[a-z0-9_-]{3,64}$/.test(remoteRoomCode) || !window.supabase?.createClient) {
+          syncPhase = "error";
+          render();
+          return;
+        }
+        syncPhase = "connecting";
+        render();
+        remoteClient = window.supabase.createClient(String(SYNC_CONFIG.supabaseUrl).trim(), String(SYNC_CONFIG.supabasePublishableKey).trim(), { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } });
+        const ready = await loadRemoteRoom(true);
+        if (!ready) return;
+        subscribeToRemoteRoom();
+      }
+
+      function render() {
+        if (!currentUser) {
+          renderLogin();
+          return;
+        }
+        app.innerHTML = `
+          <header class="app-header">
+            <div class="header-inner">
+              <button class="top-brand btn-ghost" type="button" data-action="navigate" data-screen="home" aria-label="Volver al inicio">
+                <img class="brand-logo" src="assets/counters/logo.png" alt=""><span class="brand-name">Serio</span>
+              </button>
+              <div class="header-actions">
+                ${renderSyncStatus()}
+                <div class="user-pill" aria-label="Usuario actual">
+                  <label class="user-avatar-upload" aria-label="Cambiar foto de perfil">
+                    ${renderAvatar(state.players.find((player) => player.name === currentUser), "avatar")}
+                    <input class="sr-only" type="file" accept="image/*" data-action="upload-avatar" data-player-id="${state.players.find((player) => player.name === currentUser)?.id || ""}">
+                  </label>
+                  <span>${escapeHtml(currentUser)}</span>
+                </div>
+                <button type="button" class="btn btn-ghost btn-small" data-action="logout">Salir</button>
+              </div>
+            </div>
+          </header>
+          <main class="main-inner">${renderScreen()}</main>
+        `;
+        bindAppEvents();
+      }
+
+      function renderLogin() {
+        const exampleNames = state.players.slice(0, 3).map((player) => `<button class="btn btn-secondary btn-small" type="button" data-action="fill-login" data-name="${escapeHtml(player.name)}">${escapeHtml(player.name)}</button>`).join("");
+        app.innerHTML = `
+          <main class="login-screen">
+            <section class="login-layout" aria-labelledby="login-title">
+              <div class="login-intro">
+                <div class="brand-lockup"><img class="brand-logo" src="assets/counters/logo.png" alt=""><span class="brand-name">Serio</span></div>
+                <div class="intro-copy">
+                  <p class="eyebrow">Partidas entre amigos</p>
+                  <h1>Que empiece la ronda.</h1>
+                </div>
+              </div>
+              <div class="login-form-panel">
+                <form id="login-form" class="login-form">
+                  <p class="eyebrow">Bienvenido de nuevo</p>
+                  <h2 id="login-title">Inicia sesión</h2>
+                  <p class="muted">Nombre exacto</p>
+                  <div class="form-stack" style="margin-top:24px">
+                    <div>
+                      <label class="field-label" for="login-name">Tu nombre</label>
+                      <input id="login-name" class="text-input" autocomplete="name" placeholder="Ej. Carlos" required>
+                    </div>
+                    <div id="login-error" class="form-error" role="alert"></div>
+                    <label class="session-check"><input id="keep-session" type="checkbox"><span>Mantener la sesión iniciada en este dispositivo</span></label>
+                    <button class="btn btn-primary btn-block" type="submit">Entrar en Serio <span aria-hidden="true">→</span></button>
+                  </div>
+                  <div class="demo-hint"><strong>Datos de prueba</strong><br>Prueba con uno de estos nombres:</div>
+                  <div class="viz-row" style="margin-top:10px">${exampleNames || `<span class="small faint">Aún no hay jugadores. Añade uno desde una sesión ya iniciada.</span>`}</div>
+                </form>
+              </div>
+            </section>
+          </main>
+        `;
+        document.getElementById("login-form").addEventListener("submit", (event) => {
+          event.preventDefault();
+          const input = document.getElementById("login-name");
+          const name = input.value.trim();
+          const player = state.players.find((item) => item.name === name);
+          const error = document.getElementById("login-error");
+          if (!player) {
+            error.textContent = "No encontramos ese nombre. Debe coincidir exactamente con un jugador registrado.";
+            input.focus();
+            return;
+          }
+          currentUser = player.name;
+          if (document.getElementById("keep-session").checked) sessionStorage.write(player.name);
+          else sessionStorage.clear();
+          currentScreen = "home";
+          render();
+        });
+        app.querySelectorAll('[data-action="fill-login"]').forEach((button) => button.addEventListener("click", () => {
+          document.getElementById("login-name").value = button.dataset.name;
+          document.getElementById("login-name").focus();
+        }));
+      }
+
+      function renderScreen() {
+        const screens = {
+          home: renderHome,
+          players: renderPlayers,
+          start: renderStart,
+          game: renderGame,
+          history: renderHistory,
+          ranking: renderRanking,
+          stats: renderStats,
+          customize: renderCustomize
+        };
+        return (screens[currentScreen] || renderHome)();
+      }
+
+      function renderHome() {
+        return `
+          <section class="screen" aria-labelledby="home-title">
+            <h1 id="home-title" class="sr-only">Menú principal</h1>
+            <div class="menu-grid">
+              ${menuCard("start", "assets/menu/EmpezarPartida.png", "Empezar partida", "start")}
+              ${menuCard("ranking", "assets/menu/RankingDeJugadores.png", state.rankingName, "ranking")}
+              ${menuCard("players", "assets/menu/ListaDeJugadores.png", "Lista de jugadores", "players")}
+              ${menuCard("history", "assets/menu/HistorialDePartidas.png", "Historial de partidas", "history")}
+              ${menuCard("stats", "assets/menu/Estadisticas.png", "Estadísticas", "stats")}
+              ${menuCard("customize", "assets/menu/PersonalizarPlanos.png", "Personalizar Planos", "customize")}
+              ${constructionCard("Editor de Mazos (En construcción)")}
+              ${constructionCard("Arbitro de jugadas (En construcción)")}
+            </div>
+          </section>
+        `;
+      }
+
+      function menuCard(screen, image, title, tone) {
+        return `<button class="menu-card ${tone}" type="button" data-action="navigate" data-screen="${screen}"><span class="menu-card-image" aria-hidden="true"><img src="${escapeHtml(image)}" alt="" loading="lazy"></span><span class="menu-card-content"><span class="menu-card-title">${escapeHtml(title)}</span></span></button>`;
+      }
+
+      function constructionCard(title) {
+        return `<button class="menu-card construction" type="button" disabled aria-label="${escapeHtml(title)}"><span class="menu-card-image" aria-hidden="true"><img src="assets/menu/EnConstruccion.png" alt="" loading="lazy"></span><span class="menu-card-content"><span class="menu-card-title">${escapeHtml(title)}</span></span></button>`;
+      }
+
+      function renderPlayers() {
+        const list = state.players.length ? state.players.map((player) => {
+          if (editingPlayerId === player.id) {
+            return `<div class="player-row"><form class="edit-row" data-player-id="${player.id}"><label class="sr-only" for="edit-${player.id}">Nuevo nombre para ${escapeHtml(player.name)}</label><input id="edit-${player.id}" class="text-input" value="${escapeHtml(player.name)}" required><button class="btn btn-primary btn-small" type="submit">Guardar</button><button class="btn btn-ghost btn-small" type="button" data-action="cancel-edit">Cancelar</button></form></div>`;
+          }
+          return `<div class="player-row"><div class="player-info">${renderAvatar(player)}<div><div class="player-name">${escapeHtml(player.name)}</div><div class="player-sub">ELO ${formatElo(visibleElo(player))}</div></div></div><div class="row-actions"><label class="icon-btn" aria-label="Cambiar foto de ${escapeHtml(player.name)}">◉<input class="sr-only" type="file" accept="image/*" data-action="upload-avatar" data-player-id="${player.id}"></label><button class="icon-btn" type="button" data-action="edit-player" data-player-id="${player.id}" aria-label="Cambiar nombre de ${escapeHtml(player.name)}">✎</button><button class="icon-btn danger" type="button" data-action="delete-player" data-player-id="${player.id}" aria-label="Eliminar a ${escapeHtml(player.name)}">×</button></div></div>`;
+        }).join("") : `<div class="empty-state"><div class="empty-icon" aria-hidden="true">♙</div><p>Aún no hay jugadores. Añade el primero para poder iniciar sesión.</p></div>`;
+        return `
+          <section class="screen" aria-labelledby="players-title">
+            <div class="screen-heading"><div><p class="eyebrow">Grupo</p><h2 id="players-title">Lista de jugadores</h2></div><div class="heading-actions"><button class="btn btn-ghost btn-small" type="button" data-action="reset-demo">Restablecer demo</button><button class="btn btn-secondary btn-small" type="button" data-action="navigate" data-screen="home">← Inicio</button></div></div>
+            <div class="panel">
+              <div class="section-title-row"><h3>Añadir jugador</h3></div>
+              <form id="add-player-form" class="inline-form"><div class="field-wrap"><label class="sr-only" for="new-player-name">Nombre del jugador</label><input id="new-player-name" class="text-input" placeholder="Ej. Marta" maxlength="40" required></div><button class="btn btn-primary" type="submit">+ Añadir jugador</button></form>
+              <div id="player-form-error" class="form-error" role="alert" style="margin-top:9px"></div>
+            </div>
+            <div class="section-block"><div class="section-title-row"><h3>Jugadores registrados</h3><span class="small faint">${state.players.length} en total</span></div><div class="players-list">${list}</div></div>
+          </section>
+        `;
+      }
+
+      function renderStart() {
+        const step = !gameDraft || gameDraft.stage === "count" ? 1 : 2;
+        const count = gameDraft?.count || 0;
+        const selected = gameDraft?.selectedIds || [];
+        return `
+          <section class="screen" aria-labelledby="start-title">
+            <div class="screen-heading"><div><p class="eyebrow">Nueva partida</p><h2 id="start-title">Prepara la mesa</h2></div><button class="btn btn-secondary btn-small" type="button" data-action="navigate" data-screen="home">← Inicio</button></div>
+            <div class="stepper" aria-label="Progreso de la configuración"><div class="step ${step === 1 ? "active" : "done"}"><span class="step-number">${step > 1 ? "✓" : "1"}</span><span class="step-label">Número de jugadores</span></div><div class="step ${step === 2 ? "active" : ""}"><span class="step-number">2</span><span class="step-label">Selecciona jugadores</span></div><div class="step"><span class="step-number">3</span><span class="step-label">A jugar</span></div></div>
+            ${step === 1 ? renderCountStep() : renderPlayersStep(count, selected)}
+          </section>
+        `;
+      }
+
+      function renderCountStep() {
+        const max = Math.min(6, state.players.length);
+        return `<div class="panel"><p class="eyebrow">Paso 1 de 2</p><h3>¿Cuántos jugadores participan?</h3>${max >= 2 ? `<div class="choice-grid" style="margin-top:20px">${[2,3,4,5,6].filter((number) => number <= max).map((number) => `<button type="button" class="choice-btn" data-action="choose-count" data-count="${number}"><strong>${number}</strong><span>${number === 1 ? "jugador" : "jugadores"}</span></button>`).join("")}</div>` : `<div class="empty-state"><div class="empty-icon" aria-hidden="true">!</div><p>Necesitas al menos 2 jugadores registrados para empezar una partida.</p></div>`}</div>`;
+      }
+
+      function renderPlayersStep(count, selected) {
+        const cards = state.players.map((player) => {
+          const isSelected = selected.includes(player.id);
+          const disabled = selected.length >= count && !isSelected;
+          return `<button type="button" class="player-select-btn ${isSelected ? "selected" : ""}" data-action="toggle-player" data-player-id="${player.id}" ${disabled ? "disabled" : ""}><span class="select-check" aria-hidden="true">✓</span><span><strong>${escapeHtml(player.name)}</strong><span class="player-sub">${isSelected ? "Seleccionado" : "Disponible"}</span></span></button>`;
+        }).join("");
+        const tierSelection = selected.length ? `<div class="tier-selection"><div class="tier-selection-title"><h4>Tier de mazo</h4><span class="small faint">ELO</span></div>${selected.map((id) => { const player = playerById(id); const tier = gameDraft.tiers[id] || 3; return `<div class="tier-row"><div class="tier-player">${renderAvatar(player)}<strong>${escapeHtml(player.name)}</strong></div><label class="sr-only" for="tier-${id}">Tier de mazo de ${escapeHtml(player.name)}</label><select id="tier-${id}" class="tier-select" data-action="set-tier" data-player-id="${id}">${Object.entries(DECK_TIERS).map(([value, config]) => `<option value="${value}" ${Number(value) === Number(tier) ? "selected" : ""}>${config.label}</option>`).join("")}</select></div>`; }).join("")}</div>` : "";
+        return `<div class="panel"><p class="eyebrow">Paso 2 de 2</p><h3>Elige a los jugadores</h3><div class="selection-summary"><strong>${selected.length} de ${count}</strong> seleccionados</div><div class="selection-grid">${cards}</div>${tierSelection}<div class="selection-footer"><button class="btn btn-ghost" type="button" data-action="back-to-count">← Cambiar número</button><button class="btn btn-primary" type="button" data-action="begin-game" ${selected.length !== count ? "disabled" : ""}>Comenzar partida <span aria-hidden="true">→</span></button></div></div>`;
+      }
+
+      function recordLifeOperation(targetId, actualDelta) {
+        const amount = Math.abs(actualDelta);
+        const actorId = gameDraft.actionActorId || gameDraft.selectedIds[0];
+        const sign = actualDelta < 0 ? -1 : 1;
+        const now = Date.now();
+        const operations = gameDraft.lifeOperations || (gameDraft.lifeOperations = []);
+        let last = operations[operations.length - 1];
+        const canGroup = last && last.targetId === targetId && last.actorId === actorId && last.sign === sign && now - last.at <= MISSCLICK_WINDOW_MS;
+        if (canGroup) {
+          last.amount += amount;
+          last.at = now;
+          return;
+        }
+        const canCancel = last && last.targetId === targetId && last.actorId === actorId && last.sign !== sign && now - last.at <= MISSCLICK_WINDOW_MS;
+        if (canCancel) {
+          if (last.amount > amount) {
+            last.amount -= amount;
+            last.at = now;
+            return;
+          }
+          operations.pop();
+          const remaining = amount - last.amount;
+          if (remaining > 0) operations.push({ targetId, actorId, sign, amount: remaining, at: now });
+          return;
+        }
+        operations.push({ targetId, actorId, sign, amount, at: now });
+      }
+
+      function applyLifeChange(targetId, delta) {
+        if (!gameDraft || gameDraft.mode !== "life") return;
+        const before = Number(gameDraft.lives[targetId]) || 0;
+        const after = before + delta;
+        const actualDelta = after - before;
+        if (!actualDelta) return;
+        gameDraft.lives[targetId] = after;
+        recordLifeOperation(targetId, actualDelta);
+        if (navigator.vibrate) navigator.vibrate(8);
+        saveGameDraft();
+        render();
+      }
+
+      function advancePlane(direction) {
+        if (!gameDraft?.planeOrder?.length) return;
+        const nextIndex = Math.max(0, Math.min(gameDraft.planeOrder.length - 1, gameDraft.planeIndex + direction));
+        if (nextIndex === gameDraft.planeIndex) return;
+        if (direction > 0) gameDraft.planesWalked = Number(gameDraft.planesWalked || 0) + 1;
+        gameDraft.planeIndex = nextIndex;
+        saveGameDraft();
+        render();
+      }
+
+      function setGameMode(mode) {
+        if (!gameDraft) return;
+        gameDraft.mode = mode;
+        saveGameDraft();
+        render();
+      }
+
+      function renderGame() {
+        if (!gameDraft || gameDraft.stage !== "playing") return renderStart();
+        const actorOptions = gameDraft.selectedIds.map((id) => `<option value="${id}" ${gameDraft.actionActorId === id ? "selected" : ""}>${escapeHtml(playerById(id).name)}</option>`).join("");
+        const mode = gameDraft.mode || "life";
+        ensureGameCounters();
+        const renderLifeCard = (id, index) => {
+          const player = playerById(id);
+          const life = gameDraft.lives[id];
+          const low = life <= 10;
+          const accent = LIFE_ACCENTS[index % LIFE_ACCENTS.length];
+          return `<article class="life-card ${low ? "low-life" : ""}" style="--life-accent:${accent}"><div class="life-player-head">${renderAvatar(player)}<div><div class="life-name">${escapeHtml(player.name)}</div><div class="life-label">${DECK_TIERS[gameDraft.tiers[id] || 3].label}</div></div></div><button class="counter-open-btn" type="button" data-action="open-counters" data-player-id="${id}" aria-label="Gestionar contadores de ${escapeHtml(player.name)}">+</button>${renderCounterIndicators(id)}<button class="life-tap-zone subtract" type="button" data-action="change-life" data-player-id="${id}" data-delta="-1" aria-label="Restar una vida a ${escapeHtml(player.name)}"></button><div class="life-value" aria-live="polite">${life}</div><button class="life-tap-zone add" type="button" data-action="change-life" data-player-id="${id}" data-delta="1" aria-label="Sumar una vida a ${escapeHtml(player.name)}"></button><div class="life-adjustments"><button class="life-btn" type="button" data-action="change-life" data-player-id="${id}" data-delta="-5" aria-label="Restar cinco vidas a ${escapeHtml(player.name)}">−5</button><button class="life-btn" type="button" data-action="change-life" data-player-id="${id}" data-delta="5" aria-label="Sumar cinco vidas a ${escapeHtml(player.name)}">+5</button></div></article>`;
+        };
+        const topSeatCount = gameDraft.selectedIds.length === 2 ? 1 : 2;
+        const topIds = gameDraft.selectedIds.slice(0, topSeatCount);
+        const bottomIds = gameDraft.selectedIds.slice(topSeatCount);
+        const topCards = topIds.map((id) => renderLifeCard(id, gameDraft.selectedIds.indexOf(id))).join("");
+        const bottomCards = bottomIds.map((id) => renderLifeCard(id, gameDraft.selectedIds.indexOf(id))).join("");
+        const lifeTable = `<div class="life-grid players-${gameDraft.selectedIds.length}"><div class="table-side table-side-top seats-${topIds.length}">${topCards}</div><div class="table-side table-side-bottom seats-${bottomIds.length}">${bottomCards}</div></div>`;
+        const lifeContent = `<div class="game-controls"><label class="game-actor">Acción de<select class="tier-select" data-action="set-actor">${actorOptions}</select></label><button class="btn btn-secondary btn-small" type="button" data-action="show-planes">Planos</button></div>${lifeTable}${renderBonusPanel()}<div class="game-finish-bar"><button class="btn btn-primary" type="button" data-action="finish-game">Finalizar partida</button></div>`;
+        const planeContent = renderGamePlanes();
+        return `<section class="screen" aria-labelledby="game-title" data-game-swipe data-game-mode="${mode}"><div class="game-topline"><div><p class="eyebrow">Partida</p><h2 id="game-title">${mode === "life" ? "Vidas" : "Planos"}</h2></div><div class="heading-actions"><button class="btn btn-secondary btn-small" type="button" data-action="${mode === "life" ? "show-planes" : "show-life"}">${mode === "life" ? "Planos →" : "← Vidas"}</button><button class="btn btn-ghost btn-small" type="button" data-action="cancel-game">Salir</button></div></div>${mode === "life" ? lifeContent : planeContent}</section>`;
+      }
+
+      function renderGamePlanes() {
+        if (!gameDraft.planeOrder?.length) return `<div class="panel empty-state plane-empty"><div class="empty-icon" aria-hidden="true">◇</div><p>No hay planos activos.</p><button class="btn btn-secondary" type="button" data-action="navigate" data-screen="customize">Personalizar planos</button></div>`;
+        const plane = gameDraft.planeOrder[gameDraft.planeIndex] || gameDraft.planeOrder[0];
+        return `<div class="plane-game-view"><div class="plane-frame"><img src="${escapeHtml(plane.image)}" alt="${escapeHtml(plane.name)}"><div class="plane-caption"><strong>${escapeHtml(plane.name)}</strong><span>${escapeHtml(plane.groupName || "")}</span></div></div><div class="plane-controls"><button class="btn btn-secondary" type="button" data-action="plane-prev" ${gameDraft.planeIndex === 0 ? "disabled" : ""}>←</button><span>${gameDraft.planeIndex + 1} / ${gameDraft.planeOrder.length}</span><button class="btn btn-secondary" type="button" data-action="plane-next" ${gameDraft.planeIndex === gameDraft.planeOrder.length - 1 ? "disabled" : ""}>→</button></div></div>`;
+      }
+
+      function renderBonusPanel() {
+        if (gameDraft.selectedIds.length < 3) return "";
+        const rows = gameDraft.selectedIds.map((id) => {
+          const player = playerById(id);
+          const bonuses = gameDraft.bonuses[id] || createPlayerBonuses();
+          return `<div class="bonus-row"><div class="bonus-player">${escapeHtml(player.name)}</div><label class="bonus-check"><input type="checkbox" data-action="set-bonus" data-player-id="${id}" data-bonus="precon" ${bonuses.precon ? "checked" : ""}><span>+1</span></label><label class="bonus-check"><input type="checkbox" data-action="set-bonus" data-player-id="${id}" data-bonus="firstBlood" ${bonuses.firstBlood ? "checked" : ""}><span>+1</span></label><label class="bonus-check"><input type="checkbox" data-action="set-bonus" data-player-id="${id}" data-bonus="noCommanderAbilities" ${bonuses.noCommanderAbilities ? "checked" : ""}><span>+2</span></label></div>`;
+        }).join("");
+        return `<div class="panel bonus-panel"><div class="section-title-row"><h3>Bonificaciones</h3></div><div class="bonus-grid"><div class="bonus-header"><span>Jugador</span><span>Precon</span><span>1ª sangre</span><span>Sin comandante</span></div>${rows}</div></div>`;
+      }
+
+      function bindGameSwipe() {
+        const gameView = app.querySelector("[data-game-swipe]");
+        if (!gameView) return;
+        let startX = 0;
+        let startY = 0;
+        gameView.addEventListener("touchstart", (event) => {
+          const touch = event.changedTouches[0];
+          startX = touch.clientX;
+          startY = touch.clientY;
+        }, { passive: true });
+        gameView.addEventListener("touchend", (event) => {
+          const touch = event.changedTouches[0];
+          const deltaX = touch.clientX - startX;
+          const deltaY = touch.clientY - startY;
+          if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY)) return;
+          if ((gameDraft.mode || "life") === "life" && deltaX > 0) setGameMode("planes");
+          if ((gameDraft.mode || "life") === "planes" && deltaX < 0) setGameMode("life");
+        }, { passive: true });
+      }
+
+      function renderHistory() {
+        const matches = [...state.matches].sort((a, b) => new Date(b.finishedAt) - new Date(a.finishedAt));
+        const content = matches.length ? matches.map((match) => {
+          const names = match.players.map((player) => player.name).join(" · ");
+          const isSerious = match.resultType === "serious";
+          const winnerDelta = isSerious ? match.elo?.changes?.[match.winnerId]?.delta : null;
+          const outcomeText = (match.winnerIds || []).length > 1 ? "empataron" : "ganó";
+          return `<article class="match-row"><div class="match-main"><div class="match-top"><span class="status-badge ${isSerious ? "" : "friendly"}">${isSerious ? "ELO activado" : "Amistosa"}</span><span class="match-date">${formatDate(match.finishedAt)}</span></div><div class="match-title">${escapeHtml(match.winnerName)} ${outcomeText}</div><div class="match-summary">${escapeHtml(names)}</div><div class="match-winner">${escapeHtml(match.registeredBy)}${winnerDelta === null || winnerDelta === undefined ? "" : ` · ELO ${formatDelta(winnerDelta)}`}</div></div><div class="match-actions"><button class="btn btn-secondary btn-small" type="button" data-action="view-match" data-match-id="${match.id}">Ver detalles</button><button class="icon-btn danger" type="button" data-action="delete-match" data-match-id="${match.id}" aria-label="Borrar partida del ${formatDate(match.finishedAt)}">×</button></div></article>`;
+        }).join("") : `<div class="panel empty-state"><div class="empty-icon" aria-hidden="true">↗</div><p>Todavía no hay partidas guardadas.</p></div>`;
+        return `<section class="screen" aria-labelledby="history-title"><div class="screen-heading"><div><p class="eyebrow">Resultados</p><h2 id="history-title">Historial de partidas</h2></div><div class="heading-actions"><button class="btn btn-primary btn-small" type="button" data-action="navigate" data-screen="start">+ Nueva partida</button><button class="btn btn-secondary btn-small" type="button" data-action="navigate" data-screen="home">← Inicio</button></div></div><div class="history-list">${content}</div></section>`;
+      }
+
+      function renderRanking() {
+        const rankedPlayers = [...state.players].sort((left, right) => {
+          const eloDifference = (Number(right.eloSecret) || ELO_CONFIG.initialSecret) - (Number(left.eloSecret) || ELO_CONFIG.initialSecret);
+          return eloDifference || left.name.localeCompare(right.name, "es");
+        });
+        const rows = rankedPlayers.length ? rankedPlayers.map((player, index) => {
+          const seriousGames = state.matches.filter((match) => match.resultType === "serious" && match.elo?.enabled && match.playerIds?.includes(player.id)).length;
+          return `<div class="ranking-row ${currentUser === player.name ? "is-current" : ""}"><div class="ranking-position">${index + 1}</div><div class="ranking-player">${renderAvatar(player)}<div><div class="ranking-name">${escapeHtml(player.name)}${currentUser === player.name ? `<span class="ranking-you">Tú</span>` : ""}</div><div class="player-sub">${seriousGames} ${seriousGames === 1 ? "partida seria" : "partidas serias"}</div></div></div><div><div class="ranking-score">${formatElo(visibleElo(player))}</div><div class="ranking-score-label">ELO visible</div></div></div>`;
+        }).join("") : `<div class="empty-state"><div class="empty-icon" aria-hidden="true">↗</div><p>Añade jugadores para construir el ranking.</p></div>`;
+        return `<section class="screen" aria-labelledby="ranking-title"><div class="screen-heading"><div><p class="eyebrow">Clasificación</p><h2 id="ranking-title">${escapeHtml(state.rankingName)}</h2></div><button class="btn btn-secondary btn-small" type="button" data-action="navigate" data-screen="home">← Inicio</button></div><div class="ranking-layout"><div class="panel"><div class="section-title-row"><h3>Tabla de clasificación</h3><span class="small faint">Más alto primero</span></div><div class="ranking-table">${rows}</div></div><div><div class="panel"><div class="section-title-row"><h3>Nombre del ranking</h3></div><form id="ranking-name-form"><label class="sr-only" for="ranking-name">Nombre del ranking</label><input id="ranking-name" class="text-input" maxlength="60" value="${escapeHtml(state.rankingName)}"><div class="rules-actions"><button class="btn btn-primary" type="submit">Guardar nombre</button><span id="ranking-name-note" class="save-note" role="status"></span></div></form></div><div class="panel" style="margin-top:14px"><h3>Configuración ELO</h3><div class="elo-config-grid"><div class="elo-config-item"><div class="elo-config-label">Inicial secreto</div><div class="elo-config-value">${formatElo(ELO_CONFIG.initialSecret)}</div></div><div class="elo-config-item"><div class="elo-config-label">Visible</div><div class="elo-config-value">${formatElo(ELO_CONFIG.initialSecret - ELO_CONFIG.visibleOffset)}</div></div><div class="elo-config-item"><div class="elo-config-label">K</div><div class="elo-config-value">${ELO_CONFIG.k}</div></div></div><table class="tier-table"><thead><tr><th>Tier</th><th>Ganancia</th><th>Pérdida</th></tr></thead><tbody>${Object.entries(DECK_TIERS).map(([tier, config]) => `<tr><td>${config.label}</td><td>×${config.gain}</td><td>×${config.loss}</td></tr>`).join("")}</tbody></table></div></div></div></section>`;
+      }
+
+      function renderStats() {
+        const totalMatches = state.matches.length;
+        const friendlyMatches = state.matches.filter((match) => match.resultType === "friendly").length;
+        const seriousMatches = state.matches.filter((match) => match.resultType === "serious").length;
+        const planesWalked = state.matches.reduce((sum, match) => sum + Number(match.planesWalked || 0), 0);
+        const highest = state.statistics.highestElo || { playerName: "—", elo: 100 };
+        const totalPlayerDamage = Object.values(state.statistics.players || {}).reduce((sum, stats) => sum + Number(stats.damageReceived || 0), 0);
+        return `<section class="screen" aria-labelledby="stats-title"><div class="screen-heading"><div><p class="eyebrow">Datos</p><h2 id="stats-title">Estadísticas</h2></div><button class="btn btn-secondary btn-small" type="button" data-action="navigate" data-screen="home">← Inicio</button></div><div class="stats-grid"><div class="mini-stat"><div class="mini-stat-label">Partidas totales</div><div class="mini-stat-value">${totalMatches}</div></div><div class="mini-stat"><div class="mini-stat-label">Amistosas</div><div class="mini-stat-value">${friendlyMatches}</div></div><div class="mini-stat"><div class="mini-stat-label">Serias</div><div class="mini-stat-value">${seriousMatches}</div></div><div class="mini-stat"><div class="mini-stat-label">Daño total de jugador</div><div class="mini-stat-value">${formatElo(totalPlayerDamage)}</div></div><div class="mini-stat"><div class="mini-stat-label">Planos caminados</div><div class="mini-stat-value">${planesWalked}</div></div><div class="mini-stat stat-wide"><div class="mini-stat-label">Mayor ELO histórico</div><div class="mini-stat-value">${formatElo(highest.elo)}</div><div class="small muted">${escapeHtml(highest.playerName || "—")}</div></div></div></section>`;
+      }
+
+      function renderCustomize() {
+        const groups = state.planes.groups.map((group) => {
+          const planeRows = group.planes.length ? group.planes.map((plane) => `<div class="custom-plane-row"><img class="plane-thumb" src="${escapeHtml(plane.image)}" alt=""><div class="custom-plane-main"><input class="text-input" value="${escapeHtml(plane.name)}" data-action="rename-plane" data-group-id="${group.id}" data-plane-id="${plane.id}" maxlength="60"><label class="plane-active"><input type="checkbox" data-action="toggle-plane" data-group-id="${group.id}" data-plane-id="${plane.id}" ${plane.active ? "checked" : ""}> Activo</label></div><button class="icon-btn danger" type="button" data-action="delete-plane" data-group-id="${group.id}" data-plane-id="${plane.id}" aria-label="Eliminar ${escapeHtml(plane.name)}">×</button></div>`).join("") : `<div class="empty-state">Sin planos</div>`;
+          return `<section class="plane-group"><div class="plane-group-head"><h3>${escapeHtml(group.name)}</h3><button class="btn btn-danger btn-small" type="button" data-action="delete-group" data-group-id="${group.id}">Eliminar grupo</button></div><div class="custom-plane-list">${planeRows}</div><label class="btn btn-secondary btn-small plane-upload-label">+ Añadir imagen<input class="sr-only" type="file" accept="image/*" multiple data-action="add-plane" data-group-id="${group.id}"></label></section>`;
+        }).join("");
+        return `<section class="screen" aria-labelledby="customize-title"><div class="screen-heading"><div><p class="eyebrow">Planos</p><h2 id="customize-title">Personalizar Planos</h2></div><button class="btn btn-secondary btn-small" type="button" data-action="navigate" data-screen="home">← Inicio</button></div><div class="panel"><form id="add-group-form" class="inline-form"><div class="field-wrap"><label class="sr-only" for="new-group-name">Nombre del grupo</label><input id="new-group-name" class="text-input" maxlength="60" placeholder="Nuevo grupo"></div><button class="btn btn-primary" type="submit">Crear grupo</button></form></div><div class="plane-groups">${groups || `<div class="panel empty-state">Crea un grupo para añadir planos.</div>`}</div></section>`;
+      }
+
+      function renderTournaments() {
+        const content = state.tournaments.length ? state.tournaments.map((tournament) => {
+          const participants = tournament.participantIds.map(playerById).filter(Boolean).map((player) => player.name).join(" · ");
+          return `<article class="tournament-item"><div class="tournament-head"><div><h3 class="tournament-name">${escapeHtml(tournament.name)}</h3><div class="tournament-meta">${formatTournamentDate(tournament.date)}</div></div><span class="status-badge friendly">${escapeHtml(tournament.status)}</span></div><div class="tournament-details"><span><strong>Participantes:</strong> ${escapeHtml(participants || "Por definir")}</span><span><strong>Partidas:</strong> ${tournament.matchIds.length}</span><span><strong>Ganador:</strong> ${tournament.winnerId ? escapeHtml(playerById(tournament.winnerId)?.name || "Sin registro") : "Por decidir"}</span></div></article>`;
+        }).join("") : `<div class="panel empty-state"><div class="empty-icon" aria-hidden="true">▦</div><p>Todavía no existen torneos registrados.</p></div>`;
+        return `<section class="screen" aria-labelledby="tournaments-title"><div class="screen-heading"><div><p class="eyebrow">Próximamente</p><h2 id="tournaments-title">Historial de torneos</h2><p>La estructura ya contempla participantes, fechas, partidas y ganadores.</p></div><button class="btn btn-secondary btn-small" type="button" data-action="navigate" data-screen="home">← Inicio</button></div><div class="tournament-list">${content}</div><div class="panel" style="margin-top:14px"><p class="small muted" style="margin:0">Los torneos todavía son informativos. En una siguiente versión podrás crearlos y registrar sus partidas desde aquí.</p></div></section>`;
+      }
+
+      function renderRules() {
+        return `<section class="screen" aria-labelledby="rules-title"><div class="screen-heading"><div><p class="eyebrow">Acuerdos del grupo</p><h2 id="rules-title">Reglas de torneos</h2><p>Edita este texto para guardar las reglas que queráis usar en futuros torneos.</p></div><button class="btn btn-secondary btn-small" type="button" data-action="navigate" data-screen="home">← Inicio</button></div><div class="panel rules-panel"><div class="panel-intro"><h3>Reglas actuales</h3><p>Se guardan automáticamente en este dispositivo al pulsar guardar.</p></div><form id="rules-form"><label class="sr-only" for="rules-text">Reglas de torneos</label><textarea id="rules-text" class="rules-textarea" maxlength="5000">${escapeHtml(state.rules || seedRules)}</textarea><div class="rules-actions"><button class="btn btn-primary" type="submit">Guardar reglas</button><span id="rules-note" class="save-note" role="status"></span></div></form></div></section>`;
+      }
+
+      function bindAppEvents() {
+        app.querySelectorAll('[data-action="navigate"]').forEach((button) => button.addEventListener("click", () => {
+          const target = button.dataset.screen;
+          if (target === "start") gameDraft = createGameDraft();
+          go(target);
+        }));
+        app.querySelector('[data-action="logout"]')?.addEventListener("click", () => { sessionStorage.clear(); currentUser = null; gameDraft = null; go("home"); });
+        app.querySelector('#add-player-form')?.addEventListener("submit", handleAddPlayer);
+        app.querySelectorAll('[data-action="edit-player"]').forEach((button) => button.addEventListener("click", () => { editingPlayerId = button.dataset.playerId; render(); document.getElementById(`edit-${editingPlayerId}`)?.focus(); }));
+        app.querySelectorAll('[data-action="cancel-edit"]').forEach((button) => button.addEventListener("click", () => { editingPlayerId = null; render(); }));
+        app.querySelectorAll('.edit-row').forEach((form) => form.addEventListener("submit", (event) => handleEditPlayer(event, form.dataset.playerId)));
+        app.querySelectorAll('[data-action="delete-player"]').forEach((button) => button.addEventListener("click", () => openDeletePlayerModal(button.dataset.playerId)));
+        app.querySelectorAll('[data-action="upload-avatar"]').forEach((input) => input.addEventListener("change", () => handleAvatarUpload(input)));
+        app.querySelector('#add-group-form')?.addEventListener("submit", handleAddGroup);
+        app.querySelectorAll('[data-action="add-plane"]').forEach((input) => input.addEventListener("change", () => handlePlaneUpload(input)));
+        app.querySelectorAll('[data-action="toggle-plane"]').forEach((input) => input.addEventListener("change", () => togglePlane(input.dataset.groupId, input.dataset.planeId, input.checked)));
+        app.querySelectorAll('[data-action="rename-plane"]').forEach((input) => input.addEventListener("change", () => renamePlane(input.dataset.groupId, input.dataset.planeId, input.value)));
+        app.querySelectorAll('[data-action="delete-plane"]').forEach((button) => button.addEventListener("click", () => openDeletePlaneModal(button.dataset.groupId, button.dataset.planeId)));
+        app.querySelectorAll('[data-action="delete-group"]').forEach((button) => button.addEventListener("click", () => openDeleteGroupModal(button.dataset.groupId)));
+        app.querySelector('[data-action="reset-demo"]')?.addEventListener("click", openResetDemoModal);
+        app.querySelectorAll('[data-action="choose-count"]').forEach((button) => button.addEventListener("click", () => {
+          gameDraft = { ...createGameDraft(), stage: "selecting", count: Number(button.dataset.count) };
+          render();
+        }));
+        app.querySelector('[data-action="back-to-count"]')?.addEventListener("click", () => { gameDraft = createGameDraft(); render(); });
+        app.querySelectorAll('[data-action="toggle-player"]').forEach((button) => button.addEventListener("click", () => {
+          const id = button.dataset.playerId;
+          const selected = gameDraft.selectedIds;
+          if (selected.includes(id)) {
+            gameDraft.selectedIds = selected.filter((item) => item !== id);
+            delete gameDraft.tiers[id];
+            delete gameDraft.bonuses[id];
+          } else {
+            gameDraft.selectedIds = [...selected, id];
+            gameDraft.tiers[id] = 3;
+            gameDraft.bonuses[id] = createPlayerBonuses();
+          }
+          render();
+        }));
+        app.querySelectorAll('[data-action="set-tier"]').forEach((select) => select.addEventListener("change", () => {
+          gameDraft.tiers[select.dataset.playerId] = Number(select.value);
+          render();
+        }));
+        app.querySelectorAll('[data-action="set-bonus"]').forEach((checkbox) => checkbox.addEventListener("change", () => {
+          if (!gameDraft.bonuses[checkbox.dataset.playerId]) gameDraft.bonuses[checkbox.dataset.playerId] = createPlayerBonuses();
+          gameDraft.bonuses[checkbox.dataset.playerId][checkbox.dataset.bonus] = checkbox.checked;
+          saveGameDraft();
+          render();
+        }));
+        app.querySelector('[data-action="begin-game"]')?.addEventListener("click", () => {
+          if (!gameDraft || gameDraft.selectedIds.length !== gameDraft.count) return;
+          gameDraft.stage = "playing";
+          gameDraft.startedAt = new Date().toISOString();
+          gameDraft.lives = Object.fromEntries(gameDraft.selectedIds.map((id) => [id, 40]));
+          gameDraft.counters = createCounterState(gameDraft.selectedIds);
+          gameDraft.selectedIds.forEach((id) => { if (!gameDraft.tiers[id]) gameDraft.tiers[id] = 3; if (!gameDraft.bonuses[id]) gameDraft.bonuses[id] = createPlayerBonuses(); });
+          gameDraft.positions = Object.fromEntries(gameDraft.selectedIds.map((id, index) => [id, index + 1]));
+          gameDraft.lifeOperations = [];
+          gameDraft.actionActorId = gameDraft.selectedIds.includes(playerByIdByName(currentUser)?.id) ? playerByIdByName(currentUser).id : gameDraft.selectedIds[0];
+          gameDraft.planeOrder = randomActivePlanes();
+          gameDraft.planeIndex = 0;
+          gameDraft.planesWalked = 0;
+          gameDraft.mode = "life";
+          currentScreen = "game";
+          saveGameDraft();
+          render();
+        });
+        app.querySelector('[data-action="set-actor"]')?.addEventListener("change", (event) => { gameDraft.actionActorId = event.target.value; saveGameDraft(); render(); });
+        app.querySelectorAll('[data-action="change-life"]').forEach((button) => button.addEventListener("click", () => applyLifeChange(button.dataset.playerId, Number(button.dataset.delta))));
+        app.querySelectorAll('[data-action="open-counters"]').forEach((button) => button.addEventListener("click", () => openCountersModal(button.dataset.playerId)));
+        app.querySelector('[data-action="show-planes"]')?.addEventListener("click", () => setGameMode("planes"));
+        app.querySelector('[data-action="show-life"]')?.addEventListener("click", () => setGameMode("life"));
+        app.querySelector('[data-action="plane-prev"]')?.addEventListener("click", () => advancePlane(-1));
+        app.querySelector('[data-action="plane-next"]')?.addEventListener("click", () => advancePlane(1));
+        bindGameSwipe();
+        app.querySelector('[data-action="finish-game"]')?.addEventListener("click", openResultTypeModal);
+        app.querySelector('[data-action="cancel-game"]')?.addEventListener("click", openCancelGameModal);
+        app.querySelectorAll('[data-action="view-match"]').forEach((button) => button.addEventListener("click", () => openMatchDetails(button.dataset.matchId)));
+        app.querySelectorAll('[data-action="delete-match"]').forEach((button) => button.addEventListener("click", () => openDeleteMatchModal(button.dataset.matchId)));
+        app.querySelector('#ranking-name-form')?.addEventListener("submit", (event) => {
+          event.preventDefault();
+          const name = document.getElementById("ranking-name").value.trim();
+          if (!name) { showToast("El nombre del ranking no puede estar vacío.", true); return; }
+          state.rankingName = name;
+          saveState();
+          render();
+          showToast("Nombre del ranking actualizado.");
+        });
+        app.querySelector('#rules-form')?.addEventListener("submit", (event) => {
+          event.preventDefault();
+          state.rules = document.getElementById("rules-text").value.trim() || seedRules;
+          saveState();
+          const note = document.getElementById("rules-note");
+          note.textContent = "Reglas guardadas";
+          window.setTimeout(() => { if (note) note.textContent = ""; }, 2400);
+        });
+      }
+
+      function handleAddPlayer(event) {
+        event.preventDefault();
+        const input = document.getElementById("new-player-name");
+        const error = document.getElementById("player-form-error");
+        const name = input.value.trim();
+        error.textContent = "";
+        if (!name) { error.textContent = "Escribe un nombre para añadirlo."; return; }
+        if (state.players.some((player) => player.name.toLocaleLowerCase() === name.toLocaleLowerCase())) {
+          error.textContent = "Ese nombre ya existe. Prueba con otro diferente.";
+          input.focus();
+          return;
+        }
+        const newPlayer = { id: uid("player"), name, eloSecret: ELO_CONFIG.initialSecret, eloVisible: ELO_CONFIG.initialSecret - ELO_CONFIG.visibleOffset };
+        state.players.push(newPlayer);
+        state.statistics.players[newPlayer.id] = createPlayerStats();
+        saveState();
+        render();
+        showToast(`${name} se ha añadido a la lista.`);
+      }
+
+      function handleAvatarUpload(input) {
+        const file = input.files?.[0];
+        const player = playerById(input.dataset.playerId);
+        if (!file || !player) return;
+        if (!file.type.startsWith("image/")) { showToast("Selecciona una imagen.", true); return; }
+        if (file.size > 5 * 1024 * 1024) { showToast("La imagen debe pesar menos de 5 MB.", true); return; }
+        const reader = new FileReader();
+        reader.onload = () => {
+          const image = new Image();
+          image.onload = () => {
+            const max = 320;
+            const scale = Math.min(1, max / Math.max(image.width, image.height));
+            const canvas = document.createElement("canvas");
+            canvas.width = Math.max(1, Math.round(image.width * scale));
+            canvas.height = Math.max(1, Math.round(image.height * scale));
+            canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+            player.photo = canvas.toDataURL("image/jpeg", .82);
+            saveState();
+            render();
+            showToast("Foto actualizada.");
+          };
+          image.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function groupById(id) { return state.planes.groups.find((group) => group.id === id); }
+      function planeByIds(groupId, planeId) { return groupById(groupId)?.planes.find((plane) => plane.id === planeId); }
+
+      function handleAddGroup(event) {
+        event.preventDefault();
+        const input = document.getElementById("new-group-name");
+        const name = input.value.trim();
+        if (!name) { showToast("Escribe un nombre de grupo.", true); return; }
+        if (state.planes.groups.some((group) => group.name.toLocaleLowerCase() === name.toLocaleLowerCase())) { showToast("Ese grupo ya existe.", true); return; }
+        state.planes.groups.push({ id: uid("group"), name, planes: [] });
+        saveState();
+        render();
+        showToast("Grupo creado.");
+      }
+
+      function imageFileToDataUrl(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onerror = reject;
+          reader.onload = () => {
+            const image = new Image();
+            image.onerror = reject;
+            image.onload = () => {
+              const max = 1200;
+              const scale = Math.min(1, max / Math.max(image.width, image.height));
+              const canvas = document.createElement("canvas");
+              canvas.width = Math.max(1, Math.round(image.width * scale));
+              canvas.height = Math.max(1, Math.round(image.height * scale));
+              canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+              resolve(canvas.toDataURL("image/jpeg", .84));
+            };
+            image.src = reader.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function handlePlaneUpload(input) {
+        const group = groupById(input.dataset.groupId);
+        const files = [...(input.files || [])].filter((file) => file.type.startsWith("image/"));
+        if (!group || !files.length) return;
+        Promise.all(files.map(async (file) => ({ id: uid("plane"), name: file.name.replace(/\.[^/.]+$/, "") || "Plano", image: await imageFileToDataUrl(file), active: true }))).then((planes) => {
+          group.planes.push(...planes);
+          saveState();
+          render();
+          showToast(`${planes.length} ${planes.length === 1 ? "plano añadido" : "planos añadidos"}.`);
+        }).catch(() => showToast("No se pudo cargar una de las imágenes.", true));
+      }
+
+      function togglePlane(groupId, planeId, active) {
+        const plane = planeByIds(groupId, planeId);
+        if (!plane) return;
+        plane.active = active;
+        saveState();
+      }
+
+      function renamePlane(groupId, planeId, value) {
+        const plane = planeByIds(groupId, planeId);
+        if (!plane) return;
+        plane.name = value.trim() || "Plano";
+        saveState();
+      }
+
+      function openDeletePlaneModal(groupId, planeId) {
+        const plane = planeByIds(groupId, planeId);
+        if (!plane) return;
+        openModal(`<p class="eyebrow">Plano</p><h3>¿Eliminar ${escapeHtml(plane.name)}?</h3><div class="modal-actions"><button class="btn btn-ghost" type="button" data-modal-action="close">Cancelar</button><button class="btn btn-danger" type="button" data-modal-action="confirm-delete-plane" data-group-id="${groupId}" data-plane-id="${planeId}">Eliminar</button></div>`);
+      }
+
+      function deletePlane(groupId, planeId) {
+        const group = groupById(groupId);
+        if (!group) return;
+        group.planes = group.planes.filter((plane) => plane.id !== planeId);
+        saveState();
+        closeModal();
+        render();
+      }
+
+      function openDeleteGroupModal(groupId) {
+        const group = groupById(groupId);
+        if (!group) return;
+        openModal(`<p class="eyebrow">Grupo</p><h3>¿Eliminar ${escapeHtml(group.name)}?</h3><div class="modal-actions"><button class="btn btn-ghost" type="button" data-modal-action="close">Cancelar</button><button class="btn btn-danger" type="button" data-modal-action="confirm-delete-group" data-group-id="${groupId}">Eliminar</button></div>`);
+      }
+
+      function deleteGroup(groupId) {
+        state.planes.groups = state.planes.groups.filter((group) => group.id !== groupId);
+        saveState();
+        closeModal();
+        render();
+      }
+
+      function handleEditPlayer(event, id) {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const input = form.querySelector("input");
+        const name = input.value.trim();
+        if (!name) { showToast("El nombre no puede estar vacío.", true); return; }
+        if (state.players.some((player) => player.id !== id && player.name.toLocaleLowerCase() === name.toLocaleLowerCase())) {
+          showToast("Ese nombre ya existe. Prueba con otro diferente.", true);
+          input.focus();
+          return;
+        }
+        const player = playerById(id);
+        const oldName = player.name;
+        player.name = name;
+        saveState();
+        editingPlayerId = null;
+        if (currentUser === oldName) currentUser = name;
+        if (sessionStorage.read() === oldName) sessionStorage.write(name);
+        render();
+        showToast("Nombre actualizado.");
+      }
+
+      function openDeletePlayerModal(id) {
+        const player = playerById(id);
+        if (!player) return;
+        openModal(`<p class="eyebrow">Eliminar jugador</p><h3>¿Eliminar a ${escapeHtml(player.name)}?</h3><p class="modal-copy">El jugador desaparecerá de la lista, pero las partidas históricas conservarán su nombre y sus resultados.</p><div class="modal-actions"><button class="btn btn-ghost" type="button" data-modal-action="close">Cancelar</button><button class="btn btn-danger" type="button" data-modal-action="confirm-delete-player" data-player-id="${id}">Sí, eliminar</button></div>`);
+      }
+
+      function deletePlayer(id) {
+        const player = playerById(id);
+        if (!player) return;
+        state.players = state.players.filter((item) => item.id !== id);
+        saveState();
+        closeModal();
+        if (currentUser === player.name) {
+          sessionStorage.clear();
+          currentUser = null;
+          currentScreen = "home";
+          render();
+          showToast("Jugador eliminado. La sesión se ha cerrado.");
+        } else {
+          render();
+          showToast(`${player.name} se ha eliminado.`);
+        }
+      }
+
+      function openResetDemoModal() {
+        openModal(`<p class="eyebrow">Datos de prueba</p><h3>¿Restablecer la demo?</h3><p class="modal-copy">Se sustituirán jugadores, partidas, torneos y reglas actuales por los datos de ejemplo iniciales. Esta acción no se puede deshacer.</p><div class="modal-actions"><button class="btn btn-ghost" type="button" data-modal-action="close">Cancelar</button><button class="btn btn-danger" type="button" data-modal-action="reset-demo">Restablecer demo</button></div>`);
+      }
+
+      function resetDemo() {
+        state = createDemoState();
+        saveState();
+        closeModal();
+        if (currentUser && !state.players.some((player) => player.name === currentUser)) currentUser = state.players[0].name;
+        render();
+        showToast("Datos de ejemplo restablecidos.");
+      }
+
+      function openCancelGameModal() {
+        openModal(`<p class="eyebrow">Partida en curso</p><h3>¿Salir sin guardar?</h3><p class="modal-copy">Se perderán las vidas actuales y la partida no aparecerá en el historial.</p><div class="modal-actions"><button class="btn btn-ghost" type="button" data-modal-action="close">Continuar partida</button><button class="btn btn-danger" type="button" data-modal-action="cancel-game">Salir sin guardar</button></div>`);
+      }
+
+      function cancelGame() { gameDraft = null; saveGameDraft(); closeModal(); go("home"); }
+
+      function openCountersModal(targetId) {
+        if (!gameDraft || gameDraft.stage !== "playing") return;
+        const target = playerById(targetId);
+        if (!target) return;
+        const counters = ensureGameCounters()[targetId] || createCounterEntry();
+        const standardCounter = (type, label, image) => `<div class="counter-row"><div class="counter-kind"><img src="${image}" alt=""><span>${label}</span></div><div class="counter-stepper"><button type="button" data-modal-action="change-counter" data-player-id="${targetId}" data-counter-type="${type}" data-delta="-1" aria-label="Restar ${label}">−</button><strong class="counter-value">${counters[type]}</strong><button type="button" data-modal-action="change-counter" data-player-id="${targetId}" data-counter-type="${type}" data-delta="1" aria-label="Sumar ${label}">+</button></div></div>`;
+        const commanderSources = gameDraft.selectedIds.filter((sourceId) => sourceId !== targetId);
+        const commanderRows = commanderSources.map((sourceId) => {
+          const source = playerById(sourceId);
+          const amount = Number(counters.commander?.[sourceId]) || 0;
+          return `<div class="counter-row"><div class="counter-kind">${renderAvatar(source, "counter-source-avatar")}<span>Comandante de ${escapeHtml(source.name)}</span></div><div class="counter-stepper"><button type="button" data-modal-action="change-counter" data-player-id="${targetId}" data-counter-type="commander" data-source-id="${sourceId}" data-delta="-1" aria-label="Restar daño de comandante de ${escapeHtml(source.name)}">−</button><strong class="counter-value">${amount}</strong><button type="button" data-modal-action="change-counter" data-player-id="${targetId}" data-counter-type="commander" data-source-id="${sourceId}" data-delta="1" aria-label="Sumar daño de comandante de ${escapeHtml(source.name)}">+</button></div></div>`;
+        }).join("");
+        openModal(`<p class="eyebrow">Contadores</p><h3>${escapeHtml(target.name)}</h3><div class="counter-list">${standardCounter("poison", "Veneno", "assets/counters/VenenoContador.png")}${standardCounter("radiation", "Radiación", "assets/counters/RadiacionContador.png")}</div><p class="counter-section-title">Daño de comandante recibido</p><div class="counter-list">${commanderRows}</div><div class="modal-actions"><button class="btn btn-ghost" type="button" data-modal-action="close">Listo</button></div>`);
+      }
+
+      function changeGameCounter(targetId, type, delta, sourceId) {
+        if (!gameDraft || gameDraft.stage !== "playing") return;
+        const counters = ensureGameCounters()[targetId];
+        if (!counters) return;
+        if (type === "commander") {
+          if (!sourceId) return;
+          const next = Math.max(0, (Number(counters.commander[sourceId]) || 0) + Number(delta));
+          if (next) counters.commander[sourceId] = next;
+          else delete counters.commander[sourceId];
+        } else if (type === "poison" || type === "radiation") {
+          counters[type] = Math.max(0, (Number(counters[type]) || 0) + Number(delta));
+        } else return;
+        if (navigator.vibrate) navigator.vibrate(8);
+        saveGameDraft();
+        render();
+        openCountersModal(targetId);
+      }
+
+      function openResultTypeModal() {
+        openModal(`<p class="eyebrow">Paso final</p><h3>¿Qué tipo de resultado es?</h3><p class="modal-copy">Elige cómo quieres registrar esta partida. Podrás seleccionar el ganador en el siguiente paso.</p><div class="modal-choice-list"><button class="modal-choice" type="button" data-modal-action="choose-result" data-result="serious"><span><span class="modal-choice-label">Resultado serio</span><span class="modal-choice-sub">ELO activado · actualiza el ranking</span></span><span class="modal-choice-symbol" aria-hidden="true">↗</span></button><button class="modal-choice" type="button" data-modal-action="choose-result" data-result="friendly"><span><span class="modal-choice-label">Resultado amistoso</span><span class="modal-choice-sub">ELO desactivado · solo historial</span></span><span class="modal-choice-symbol" aria-hidden="true">♡</span></button></div><div class="modal-actions"><button class="btn btn-ghost" type="button" data-modal-action="close">Cancelar</button></div>`);
+      }
+
+      function chooseResultType(result) {
+        gameDraft.resultType = result;
+        closeModal();
+        gameDraft.positions = gameDraft.positions || Object.fromEntries(gameDraft.selectedIds.map((id, index) => [id, index + 1]));
+        saveGameDraft();
+        openPositionsModal();
+      }
+
+      function openPositionsModal() {
+        const options = gameDraft.selectedIds.map((id) => {
+          const player = playerById(id);
+          const position = Number(gameDraft.positions[id]) || 1;
+          return `<div class="position-choice"><div class="position-player">${renderAvatar(player)}<div><strong>${escapeHtml(player.name)}</strong><span class="modal-choice-sub">${gameDraft.lives[id]} vidas</span></div></div><label class="sr-only" for="position-${id}">Posición de ${escapeHtml(player.name)}</label><select id="position-${id}" class="tier-select position-select" data-modal-action="set-position" data-player-id="${id}">${Array.from({ length: gameDraft.selectedIds.length }, (_, index) => index + 1).map((value) => `<option value="${value}" ${value === position ? "selected" : ""}>${value}º</option>`).join("")}</select></div>`;
+        }).join("");
+        openModal(`<p class="eyebrow">Resultado</p><h3>Posiciones finales</h3><div class="position-list">${options}</div><div class="modal-actions"><button class="btn btn-ghost" type="button" data-modal-action="back-to-result">← Atrás</button><button class="btn btn-primary" type="button" data-modal-action="confirm-positions">Guardar resultado</button></div>`);
+      }
+
+      function expectedScore(playerSecret, opponentSecret) {
+        return 1 / (1 + Math.pow(10, (opponentSecret - playerSecret) / 400));
+      }
+
+      function weightedTierDelta(rawDelta, tier) {
+        if (rawDelta > 0) return rawDelta * DECK_TIERS[tier].gain;
+        if (rawDelta < 0) return rawDelta * DECK_TIERS[tier].loss;
+        return 0;
+      }
+
+      function calculateEloChanges(positions) {
+        const participants = gameDraft.selectedIds.map((id) => {
+          const player = playerById(id);
+          return {
+            id,
+            name: player.name,
+            secret: Number(player.eloSecret) || ELO_CONFIG.initialSecret,
+            tier: Number(gameDraft.tiers[id]) || 3,
+            bonuses: gameDraft.bonuses[id] || createPlayerBonuses(),
+            position: Number(positions[id]) || 1
+          };
+        });
+        const changes = Object.fromEntries(participants.map((participant) => [participant.id, {
+          playerId: participant.id,
+          playerName: participant.name,
+          position: participant.position,
+          beforeSecret: participant.secret,
+          beforeVisible: participant.secret - ELO_CONFIG.visibleOffset,
+          tier: participant.tier,
+          tierLabel: DECK_TIERS[participant.tier].label,
+          pairDelta: 0,
+          pairDetails: [],
+          bonusBreakdown: { participation: 0, precon: 0, firstBlood: 0, noCommanderAbilities: 0 },
+          bonusTotal: 0,
+          delta: 0,
+          afterSecret: participant.secret,
+          afterVisible: participant.secret - ELO_CONFIG.visibleOffset
+        }]));
+
+        for (let leftIndex = 0; leftIndex < participants.length; leftIndex += 1) {
+          for (let rightIndex = leftIndex + 1; rightIndex < participants.length; rightIndex += 1) {
+            const left = participants[leftIndex];
+            const right = participants[rightIndex];
+            const leftActual = left.position < right.position ? 1 : left.position > right.position ? 0 : 0.5;
+            const rightActual = 1 - leftActual;
+            const leftExpected = expectedScore(left.secret, right.secret);
+            const rightExpected = 1 - leftExpected;
+            const leftRaw = ELO_CONFIG.k * (leftActual - leftExpected);
+            const rightRaw = ELO_CONFIG.k * (rightActual - rightExpected);
+            const leftDelta = weightedTierDelta(leftRaw, left.tier);
+            const rightDelta = weightedTierDelta(rightRaw, right.tier);
+            const leftResult = leftActual === 1 ? "victoria" : leftActual === 0 ? "derrota" : "empate";
+            const rightResult = rightActual === 1 ? "victoria" : rightActual === 0 ? "derrota" : "empate";
+            changes[left.id].pairDelta += leftDelta;
+            changes[right.id].pairDelta += rightDelta;
+            changes[left.id].pairDetails.push({ opponentId: right.id, opponentName: right.name, result: leftResult, expected: Number(leftExpected.toFixed(4)), rawDelta: Number(leftRaw.toFixed(2)), tierMultiplier: leftRaw >= 0 ? DECK_TIERS[left.tier].gain : DECK_TIERS[left.tier].loss, delta: Number(leftDelta.toFixed(2)) });
+            changes[right.id].pairDetails.push({ opponentId: left.id, opponentName: left.name, result: rightResult, expected: Number(rightExpected.toFixed(4)), rawDelta: Number(rightRaw.toFixed(2)), tierMultiplier: rightRaw >= 0 ? DECK_TIERS[right.tier].gain : DECK_TIERS[right.tier].loss, delta: Number(rightDelta.toFixed(2)) });
+          }
+        }
+
+        participants.forEach((participant) => {
+          const change = changes[participant.id];
+          if (participants.length >= 3) {
+            change.bonusBreakdown.participation = 1;
+            change.bonusBreakdown.precon = participant.bonuses.precon ? 1 : 0;
+            change.bonusBreakdown.firstBlood = participant.bonuses.firstBlood ? 1 : 0;
+            change.bonusBreakdown.noCommanderAbilities = participant.bonuses.noCommanderAbilities ? 2 : 0;
+          }
+          change.bonusTotal = Object.values(change.bonusBreakdown).reduce((sum, bonus) => sum + bonus, 0);
+          change.delta = Math.round(change.pairDelta + change.bonusTotal);
+          change.afterSecret = change.beforeSecret + change.delta;
+          change.afterVisible = change.afterSecret - ELO_CONFIG.visibleOffset;
+          const player = playerById(participant.id);
+          player.eloSecret = change.afterSecret;
+          player.eloVisible = change.afterVisible;
+        });
+        return changes;
+      }
+
+      function buildMatchStatistics(operations) {
+        const changes = {};
+        const ensure = (id) => {
+          if (!changes[id]) changes[id] = { damageDealt: 0, damageReceived: 0, healingDone: 0, healingReceived: 0, biggestHit: 0 };
+          return changes[id];
+        };
+        (operations || []).forEach((operation) => {
+          const amount = Math.max(0, Number(operation.amount) || 0);
+          if (!amount) return;
+          const actor = ensure(operation.actorId);
+          const target = ensure(operation.targetId);
+          if (operation.sign < 0) {
+            actor.damageDealt += amount;
+            actor.biggestHit = Math.max(actor.biggestHit, amount);
+            target.damageReceived += amount;
+          } else {
+            actor.healingDone += amount;
+            target.healingReceived += amount;
+          }
+        });
+        return changes;
+      }
+
+      function applyMatchStatistics(changes, multiplier = 1) {
+        Object.entries(changes || {}).forEach(([id, change]) => {
+          if (!state.statistics.players[id]) state.statistics.players[id] = createPlayerStats();
+          const playerStats = state.statistics.players[id];
+          ["damageDealt", "damageReceived", "healingDone", "healingReceived"].forEach((key) => { playerStats[key] = Math.max(0, Number(playerStats[key] || 0) + Number(change[key] || 0) * multiplier); });
+          if (multiplier > 0) playerStats.biggestHit = Math.max(Number(playerStats.biggestHit || 0), Number(change.biggestHit || 0));
+        });
+      }
+
+      function recalculateBiggestHits() {
+        Object.values(state.statistics.players).forEach((stats) => { stats.biggestHit = 0; });
+        state.matches.forEach((match) => Object.entries(match.statistics?.playerChanges || {}).forEach(([id, change]) => {
+          if (!state.statistics.players[id]) state.statistics.players[id] = createPlayerStats();
+          state.statistics.players[id].biggestHit = Math.max(Number(state.statistics.players[id].biggestHit || 0), Number(change.biggestHit || 0));
+        }));
+      }
+
+      function updateHistoricalElo(changes) {
+        Object.values(changes || {}).forEach((change) => {
+          if (Number(change.afterVisible) > Number(state.statistics.highestElo.elo)) state.statistics.highestElo = { playerId: change.playerId, playerName: change.playerName, elo: Number(change.afterVisible) };
+        });
+      }
+
+      function saveMatch() {
+        const positions = Object.fromEntries(gameDraft.selectedIds.map((id) => [id, Number(gameDraft.positions[id]) || 1]));
+        if (!Object.values(positions).includes(1)) positions[gameDraft.selectedIds[0]] = 1;
+        const firstPlaceIds = gameDraft.selectedIds.filter((id) => positions[id] === 1);
+        const winnerIds = firstPlaceIds.length ? firstPlaceIds : [gameDraft.selectedIds[0]];
+        const winnerNames = winnerIds.map((id) => playerById(id).name);
+        const matchPlayers = gameDraft.selectedIds.map((id) => ({ id, name: playerById(id).name, finalLife: gameDraft.lives[id], position: positions[id] }));
+        const isSerious = gameDraft.resultType === "serious";
+        const eloChanges = isSerious ? calculateEloChanges(positions) : {};
+        const elo = isSerious ? { enabled: true, applied: true, changes: eloChanges, config: ELO_CONFIG, reversible: true } : { enabled: false, applied: false, changes: {}, config: ELO_CONFIG, reversible: true };
+        const statisticChanges = buildMatchStatistics(gameDraft.lifeOperations);
+        applyMatchStatistics(statisticChanges);
+        if (isSerious) updateHistoricalElo(eloChanges);
+        state.matches.push({
+          id: uid("match"),
+          playerIds: [...gameDraft.selectedIds],
+          players: matchPlayers,
+          positions,
+          winnerId: winnerIds[0],
+          winnerIds,
+          winnerName: winnerNames.join(" · "),
+          registeredBy: currentUser,
+          resultType: gameDraft.resultType,
+          tiers: Object.fromEntries(gameDraft.selectedIds.map((id) => [id, Number(gameDraft.tiers[id]) || 3])),
+          bonuses: Object.fromEntries(gameDraft.selectedIds.map((id) => [id, gameDraft.bonuses[id] || createPlayerBonuses()])),
+          elo,
+          statistics: { playerChanges: statisticChanges },
+          lifeOperations: (gameDraft.lifeOperations || []).map((operation) => ({ targetId: operation.targetId, actorId: operation.actorId, sign: operation.sign, amount: operation.amount })),
+          counters: JSON.parse(JSON.stringify(ensureGameCounters())),
+          planesWalked: Number(gameDraft.planesWalked) || 0,
+          rankingNameAtTime: state.rankingName,
+          startedAt: gameDraft.startedAt,
+          finishedAt: new Date().toISOString()
+        });
+        saveState();
+        gameDraft = null;
+        closeModal();
+        currentScreen = "history";
+        render();
+        showToast("Partida guardada en el historial.");
+      }
+
+      function openDeleteMatchModal(id) {
+        const match = state.matches.find((item) => item.id === id);
+        if (!match) return;
+        openModal(`<p class="eyebrow">Borrar partida</p><h3>¿Borrar esta partida?</h3><p class="modal-copy">Se eliminará el resultado del ${formatDate(match.finishedAt)}. Cuando exista ELO, solo se desharán los movimientos ligados a esta partida; no se recalcularán las posteriores.</p><div class="modal-actions"><button class="btn btn-ghost" type="button" data-modal-action="close">Cancelar</button><button class="btn btn-danger" type="button" data-modal-action="confirm-delete-match" data-match-id="${id}">Sí, borrar</button></div>`);
+      }
+
+      function deleteMatch(id) {
+        const match = state.matches.find((item) => item.id === id);
+        if (match?.statistics?.playerChanges) applyMatchStatistics(match.statistics.playerChanges, -1);
+        if (match?.elo?.enabled && match.elo.applied) {
+          Object.values(match.elo.changes || {}).forEach((change) => {
+            const player = playerById(change.playerId);
+            if (!player) return;
+            player.eloSecret = Math.round((Number(player.eloSecret) || ELO_CONFIG.initialSecret) - Number(change.delta || 0));
+            player.eloVisible = player.eloSecret - ELO_CONFIG.visibleOffset;
+          });
+          match.elo.applied = false;
+          match.elo.revertedAt = new Date().toISOString();
+        }
+        state.matches = state.matches.filter((item) => item.id !== id);
+        recalculateBiggestHits();
+        saveState();
+        closeModal();
+        render();
+        showToast(match ? `Partida de ${match.winnerName} eliminada.` : "Partida eliminada.");
+      }
+
+      function openMatchDetails(id) {
+        selectedMatchId = id;
+        const match = state.matches.find((item) => item.id === id);
+        if (!match) return;
+        const serious = match.resultType === "serious";
+        const lives = match.players.map((player) => { const position = player.position || match.positions?.[player.id] || "—"; return `<div class="life-result-row"><span>${position}º · ${escapeHtml(player.name)}</span><strong>${player.finalLife} vidas</strong></div>`; }).join("");
+        const eloRows = serious && Object.keys(match.elo?.changes || {}).length ? Object.values(match.elo.changes).map((change) => `<div class="life-result-row"><span>${change.position || "—"}º · ${escapeHtml(change.playerName)} · ${escapeHtml(change.tierLabel || "Tier 3")}${change.bonusTotal ? ` · bonus +${change.bonusTotal}` : ""}</span><strong>${formatDelta(change.delta)} · ${formatElo(change.afterVisible)}</strong></div>`).join("") : `<p class="ranking-note">Este resultado no modificó el ELO.</p>`;
+        const outcomeText = (match.winnerIds || []).length > 1 ? "empataron" : "ganó";
+        openModal(`<p class="eyebrow">Detalle de partida</p><h3>${escapeHtml(match.winnerName)} ${outcomeText}</h3><div class="detail-table"><div class="detail-line"><span>Fecha y hora</span><strong>${formatDate(match.finishedAt)}</strong></div><div class="detail-line"><span>Registró</span><strong>${escapeHtml(match.registeredBy)}</strong></div><div class="detail-line"><span>Resultado</span><strong>${serious ? "Serio · ELO activado" : "Amistoso · ELO desactivado"}</strong></div><div class="detail-line"><span>Ranking</span><strong>${escapeHtml(match.rankingNameAtTime || state.rankingName)}</strong></div></div><h4 class="detail-subheading">Posiciones y vidas</h4>${lives}<h4 class="detail-subheading">Movimiento ELO</h4>${eloRows}<div class="modal-actions"><button class="btn btn-ghost" type="button" data-modal-action="close">Cerrar</button><button class="btn btn-danger" type="button" data-modal-action="confirm-delete-from-detail" data-match-id="${id}">Borrar partida</button></div>`);
+      }
+
+      function openModal(content) {
+        modalRoot.innerHTML = `<div class="modal-backdrop" role="presentation"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">${content}</div></div>`;
+        modalRoot.querySelector(".modal-backdrop").addEventListener("click", (event) => { if (event.target.classList.contains("modal-backdrop")) closeModal(); });
+        modalRoot.querySelectorAll('[data-modal-action]').forEach((button) => button.addEventListener("click", () => {
+          const action = button.dataset.modalAction;
+          if (action === "close") closeModal();
+          if (action === "choose-result") chooseResultType(button.dataset.result);
+          if (action === "confirm-positions") saveMatch();
+          if (action === "back-to-result") { closeModal(); openResultTypeModal(); }
+          if (action === "confirm-delete-player") deletePlayer(button.dataset.playerId);
+          if (action === "confirm-delete-plane") deletePlane(button.dataset.groupId, button.dataset.planeId);
+          if (action === "confirm-delete-group") deleteGroup(button.dataset.groupId);
+          if (action === "confirm-delete-match" || action === "confirm-delete-from-detail") deleteMatch(button.dataset.matchId);
+          if (action === "cancel-game") cancelGame();
+          if (action === "reset-demo") resetDemo();
+          if (action === "change-counter") changeGameCounter(button.dataset.playerId, button.dataset.counterType, Number(button.dataset.delta), button.dataset.sourceId);
+        }));
+        modalRoot.querySelectorAll('[data-modal-action="set-position"]').forEach((select) => select.addEventListener("change", () => {
+          gameDraft.positions[select.dataset.playerId] = Number(select.value);
+          saveGameDraft();
+          openPositionsModal();
+        }));
+        modalRoot.querySelector(".modal")?.querySelector("button, input, textarea")?.focus();
+      }
+
+      function closeModal() { modalRoot.innerHTML = ""; selectedMatchId = null; }
+
+      function showToast(message, error = false) {
+        const toast = document.createElement("div");
+        toast.className = `toast${error ? " error" : ""}`;
+        toast.textContent = message;
+        toastRegion.appendChild(toast);
+        window.setTimeout(() => toast.remove(), 3200);
+      }
+
+      window.addEventListener("storage", (event) => {
+        if (event.key !== STORAGE_KEY || !event.newValue) return;
+        try {
+          state = normalizeState(JSON.parse(event.newValue));
+          if (currentUser && !state.players.some((player) => player.name === currentUser)) {
+            currentUser = null;
+            sessionStorage.clear();
+          }
+          render();
+        } catch (_) { /* se conserva el estado local actual */ }
+      });
+
+      render();
+      initializeRemoteSync();
+    })();
+  </script>
+</body>
+</html>
